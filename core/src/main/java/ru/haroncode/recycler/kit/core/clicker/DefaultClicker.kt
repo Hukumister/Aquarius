@@ -1,10 +1,11 @@
-package ru.haroncode.recycler.kit.core
+package ru.haroncode.recycler.kit.core.clicker
 
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
-class DefaultItemClicker<ItemModel, VH : BaseViewHolder>(
+class DefaultClicker<ItemModel, VH : RecyclerView.ViewHolder>(
     private val consumer: (ItemModel) -> Unit
-) : ItemClicker<ItemModel, VH> {
+) : Clicker<ItemModel, VH> {
 
     override fun onBindClicker(holder: VH) = Unit
 

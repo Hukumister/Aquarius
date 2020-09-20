@@ -1,4 +1,4 @@
-package ru.haroncode.recycler.kit.core.datasource
+package ru.haroncode.recycler.kit.core.observer
 
 import androidx.recyclerview.widget.RecyclerView
 

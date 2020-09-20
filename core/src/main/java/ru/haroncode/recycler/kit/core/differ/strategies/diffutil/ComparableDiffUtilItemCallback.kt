@@ -1,8 +1,8 @@
-package ru.haroncode.recycler.kit.core.differ.diffutil
+package ru.haroncode.recycler.kit.core.differ.strategies.diffutil
 
-import ru.haroncode.wordlearn.common.ui.adapter.SimpleItemDiffCallback
+import androidx.recyclerview.widget.DiffUtil
 
-class ComparableDiffUtilItemCallback<Item : ComparableItem> : SimpleItemDiffCallback<Item>() {
+class ComparableDiffUtilItemCallback<Item : ComparableItem> : DiffUtil.ItemCallback<Item>() {
 
     override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean = oldItem.areContentsTheSame(newItem)
 

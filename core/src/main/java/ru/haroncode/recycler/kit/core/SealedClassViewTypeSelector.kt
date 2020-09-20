@@ -10,8 +10,9 @@ class SealedClassViewTypeSelector<ItemModel : Any>(
 
     companion object {
 
-        fun <ItemModel : Any> of(vararg subclasses: KClass<out ItemModel>): SealedClassViewTypeSelector<ItemModel> =
-            SealedClassViewTypeSelector(subclasses.toList())
+        fun <ItemModel : Any> of(
+            vararg subclasses: KClass<out ItemModel>
+        ): SealedClassViewTypeSelector<ItemModel> = SealedClassViewTypeSelector(subclasses.toList())
     }
 
     override fun invoke(itemModel: ItemModel): Int = viewTypeFor(itemModel::class)

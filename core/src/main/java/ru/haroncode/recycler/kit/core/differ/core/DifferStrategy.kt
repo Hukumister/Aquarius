@@ -1,6 +1,6 @@
-package ru.haroncode.recycler.kit.core.differ
+package ru.haroncode.recycler.kit.core.differ.core
 
-import ru.haroncode.recycler.kit.core.datasource.DataSourceObserver
+import ru.haroncode.recycler.kit.core.observer.DataSourceObserver
 
 interface DifferStrategy<T> {
 
