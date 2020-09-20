@@ -16,18 +16,18 @@ abstract class BaseRenderer<ItemModel, RC, VH : RecyclerView.ViewHolder> {
         onBindView(viewHolder, item)
     }
 
-    fun onRecycleViewHolder(holder: RecyclerView.ViewHolder) {
+    internal fun onRecycleViewHolder(holder: RecyclerView.ViewHolder) {
         val viewHolder = holder as VH
         onRecycle(viewHolder)
     }
 
-    fun onBindItemModel(holder: RecyclerView.ViewHolder, itemModel: ItemModel) {
+    internal fun onBindItemModel(holder: RecyclerView.ViewHolder, itemModel: ItemModel) {
         val viewHolder = holder as VH
         val item = getItem(itemModel)
         onBindView(viewHolder, item)
     }
 
-    fun onBindItemModel(holder: RecyclerView.ViewHolder, itemModel: ItemModel, payloads: List<Any?>) {
+    internal fun onBindItemModel(holder: RecyclerView.ViewHolder, itemModel: ItemModel, payloads: List<Any?>) {
         val viewHolder = holder as VH
         val item = getItem(itemModel)
         onBindView(viewHolder, item, payloads)

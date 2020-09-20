@@ -1,6 +1,5 @@
 package ru.haroncode.recycler.kit.core
 
-import android.util.SparseArray
 import androidx.collection.SparseArrayCompat
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -20,11 +19,11 @@ class AsyncRenderer<ItemModel : Any>(
     clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
     itemIdSelector: (ItemModel) -> Long,
     viewTypeSelector: (ItemModel) -> Int,
-    renderers: SparseArray<BaseRenderer<out ItemModel, *, out RecyclerView.ViewHolder>>
+    renderers: SparseArrayCompat<BaseRenderer<out ItemModel, *, out RecyclerView.ViewHolder>>
 ) : BaseRenderAdapter<ItemModel>(
     items = items,
     differStrategy = differStrategy,
-    itemClickers = clickers,
+    clickers = clickers,
     itemIdSelector = itemIdSelector,
     viewTypeSelector = viewTypeSelector,
     renderers = renderers
