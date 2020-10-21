@@ -1,4 +1,4 @@
-package ru.haroncode.recycler.kit.core.differ.strategies.diffutil
+package ru.haroncode.recycler.kit.core.base.strategies.diffutil
 
 interface ComparableItem {
 

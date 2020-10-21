@@ -1,48 +1,49 @@
-package ru.haroncode.recycler.kit.core
+package ru.haroncode.recycler.kit.core.async
 
 import androidx.collection.SparseArrayCompat
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ru.haroncode.recycler.kit.core.AbstractRenderAdapter
+import ru.haroncode.recycler.kit.core.BaseRenderer
+import ru.haroncode.recycler.kit.core.Differ
 import ru.haroncode.recycler.kit.core.clicker.Clicker
-import ru.haroncode.recycler.kit.core.differ.core.BaseDiffer
-import ru.haroncode.recycler.kit.core.differ.core.DifferStrategy
 import ru.haroncode.recycler.kit.core.observer.AdapterDataSourceObserver
-import ru.haroncode.recycler.kit.core.observer.DataSourceObserver
+import ru.haroncode.recycler.kit.core.observer.ComposeDataSourceObserver
 import ru.haroncode.recycler.kit.core.observer.DataSourceUpdateCallback
 
 class AsyncRenderer<ItemModel : Any>(
     itemCallback: DiffUtil.ItemCallback<ItemModel>,
-    items: List<ItemModel>,
-    differStrategy: DifferStrategy<ItemModel>,
     clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
     itemIdSelector: (ItemModel) -> Long,
     viewTypeSelector: (ItemModel) -> Int,
     renderers: SparseArrayCompat<BaseRenderer<out ItemModel, *, out RecyclerView.ViewHolder>>
-) : BaseRenderAdapter<ItemModel>(
-    items = items,
-    differStrategy = differStrategy,
+) : AbstractRenderAdapter<ItemModel>(
+    differ = AsyncDiffer(itemCallback),
     clickers = clickers,
     itemIdSelector = itemIdSelector,
     viewTypeSelector = viewTypeSelector,
     renderers = renderers
 ) {
 
-    override val differ: BaseDiffer<ItemModel> = AsyncDiffer(
-        itemCallback = itemCallback,
-        differStrategy = differStrategy,
-        dataSourceObserver = AdapterDataSourceObserver(this)
-    )
+    init {
+        differ as AsyncDiffer
+        differ.dataSourceObserver.registerObserver(AdapterDataSourceObserver(this))
+    }
+
+
+    class Builder{
+
+
+    }
+
+
 
     private class AsyncDiffer<T : Any>(
         itemCallback: DiffUtil.ItemCallback<T>,
-        differStrategy: DifferStrategy<T>,
-        dataSourceObserver: DataSourceObserver
-    ) : BaseDiffer<T>(
-        differStrategy = differStrategy,
-        dataSourceObserver = dataSourceObserver
-    ) {
+        val dataSourceObserver: ComposeDataSourceObserver = ComposeDataSourceObserver()
+    ) : Differ<T> {
 
         private val asyncDiffer = AsyncListDiffer(
             DataSourceUpdateCallback(dataSourceObserver),

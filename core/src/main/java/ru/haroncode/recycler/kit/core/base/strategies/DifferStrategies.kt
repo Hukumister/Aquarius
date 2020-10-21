@@ -1,10 +1,9 @@
-package ru.haroncode.recycler.kit.core.differ.strategies
+package ru.haroncode.recycler.kit.core.base.strategies
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.haroncode.recycler.kit.core.differ.core.DifferStrategy
-import ru.haroncode.recycler.kit.core.differ.strategies.diffutil.ComparableDiffUtilItemCallback
-import ru.haroncode.recycler.kit.core.differ.strategies.diffutil.ComparableItem
-import ru.haroncode.recycler.kit.core.differ.strategies.diffutil.DiffUtilDifferStrategy
+import ru.haroncode.recycler.kit.core.base.strategies.diffutil.ComparableDiffUtilItemCallback
+import ru.haroncode.recycler.kit.core.base.strategies.diffutil.ComparableItem
+import ru.haroncode.recycler.kit.core.base.strategies.diffutil.DiffUtilDifferStrategy
 
 object DifferStrategies {
 

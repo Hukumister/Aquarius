@@ -1,4 +1,4 @@
-package ru.haroncode.recycler.kit.core.differ.core
+package ru.haroncode.recycler.kit.core.base.strategies
 
 import ru.haroncode.recycler.kit.core.observer.DataSourceObserver
 

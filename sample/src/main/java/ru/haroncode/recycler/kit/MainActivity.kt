@@ -2,8 +2,9 @@ package ru.haroncode.recycler.kit
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import ru.haroncode.recycler.kit.core.BaseRenderAdapter
+import ru.haroncode.recycler.kit.core.AbstractRenderAdapter
 import ru.haroncode.recycler.kit.core.SealedClassViewTypeSelector
+import ru.haroncode.recycler.kit.core.base.strategies.diffutil.ComparableDiffUtilItemCallback
 import ru.haroncode.recycler.kit.renderers.SimpleTextRenderer
 
 class MainActivity : AppCompatActivity() {
@@ -14,7 +15,8 @@ class MainActivity : AppCompatActivity() {
 
 
         val viewTypeSelector = SealedClassViewTypeSelector.of<Item>()
-        BaseRenderAdapter.Builder<Item>()
+        AbstractRenderAdapter.Builder<Item>()
+            .withAsync(ComparableDiffUtilItemCallback())
             .singleViewType(SimpleTextRenderer())
             .build()
             .differ

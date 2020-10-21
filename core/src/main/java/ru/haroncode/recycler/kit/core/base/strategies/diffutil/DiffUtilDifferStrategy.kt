@@ -1,9 +1,9 @@
-package ru.haroncode.recycler.kit.core.differ.strategies.diffutil
+package ru.haroncode.recycler.kit.core.base.strategies.diffutil
 
 import androidx.recyclerview.widget.BatchingListUpdateCallback
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DiffUtil.DiffResult
-import ru.haroncode.recycler.kit.core.differ.core.DifferStrategy
+import ru.haroncode.recycler.kit.core.base.strategies.DifferStrategy
 import ru.haroncode.recycler.kit.core.observer.DataSourceObserver
 import ru.haroncode.recycler.kit.core.observer.DataSourceUpdateCallback
 

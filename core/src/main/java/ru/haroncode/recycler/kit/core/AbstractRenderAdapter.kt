@@ -4,28 +4,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.collection.SparseArrayCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ru.haroncode.recycler.kit.core.base.strategies.DifferStrategy
 import ru.haroncode.recycler.kit.core.clicker.ClickableRenderer
 import ru.haroncode.recycler.kit.core.clicker.Clicker
 import ru.haroncode.recycler.kit.core.clicker.Clickers
-import ru.haroncode.recycler.kit.core.differ.core.BaseDiffer
-import ru.haroncode.recycler.kit.core.differ.core.DifferStrategy
-import ru.haroncode.recycler.kit.core.differ.strategies.DifferStrategies
-import ru.haroncode.recycler.kit.core.observer.AdapterDataSourceObserver
+import kotlin.reflect.KClass
 
-open class BaseRenderAdapter<ItemModel : Any>(
-    items: List<ItemModel>,
-    differStrategy: DifferStrategy<ItemModel>,
-    private val clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
+abstract class AbstractRenderAdapter<ItemModel : Any>(
+    val differ: Differ<ItemModel>,
     private val itemIdSelector: (ItemModel) -> Long,
     private val viewTypeSelector: (ItemModel) -> Int,
+    private val clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
     private val renderers: SparseArrayCompat<BaseRenderer<out ItemModel, *, out RecyclerView.ViewHolder>>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    open val differ = BaseDiffer(
-        differStrategy = differStrategy,
-        dataSourceObserver = AdapterDataSourceObserver(this),
-    ).apply { submitList(items) }
 
     override fun getItemId(position: Int): Long {
         val itemModel = differ.currentList[position]
@@ -117,16 +110,10 @@ open class BaseRenderAdapter<ItemModel : Any>(
         renderer.onRecycleViewHolder(viewHolder)
     }
 
-    class Builder<ItemModel : Any> private constructor(
-        private val initialItems: List<ItemModel>,
-        private var differStrategy: DifferStrategy<ItemModel> = DifferStrategies.none(),
-        private var itemIdSelector: (ItemModel) -> Long = { RecyclerView.NO_ID },
-        private var hasStableIds: Boolean = false
-    ) {
+    class Builder<ItemModel : Any> {
 
-        constructor(
-            items: List<ItemModel> = emptyList()
-        ) : this(initialItems = items)
+        private var itemIdSelector: (ItemModel) -> Long = { RecyclerView.NO_ID }
+        private var hasStableIds: Boolean = false
 
         fun withItemIdSelector(itemIdSelector: (ItemModel) -> Long, hasStableIds: Boolean): Builder<ItemModel> {
             this.itemIdSelector = itemIdSelector
@@ -134,24 +121,20 @@ open class BaseRenderAdapter<ItemModel : Any>(
             return this
         }
 
-        fun withDifferStrategy(differStrategy: DifferStrategy<ItemModel>) {
-            this.differStrategy = differStrategy
-        }
-
         fun <E, VH : RecyclerView.ViewHolder> singleViewType(
             baseRenderer: BaseRenderer<out ItemModel, E, VH>,
             clicker: Clicker<E, VH> = Clickers.none()
-        ): SingleViewTypeBuilder<ItemModel> =
-            SingleViewTypeBuilder(initialItems, differStrategy, itemIdSelector, hasStableIds, baseRenderer, clicker)
+        ): SingleViewTypeBuilder<ItemModel> = SingleViewTypeBuilder(itemIdSelector, hasStableIds, baseRenderer, clicker)
+
+        fun withViewTypeSelector(viewTypeSelector: (ItemModel) -> Int): MultipleViewTypesBuilder<ItemModel> =
+            MultipleViewTypesBuilder(itemIdSelector, hasStableIds, viewTypeSelector)
+
     }
 
-
     class SingleViewTypeBuilder<ItemModel : Any>(
-        private val items: List<ItemModel>,
-        private val diff: DifferStrategy<ItemModel>,
         private val itemIdSelector: (ItemModel) -> Long,
         private val hasStableIds: Boolean,
-        private val viewHolderRenderer: BaseRenderer<out ItemModel, *, out RecyclerView.ViewHolder>,
+        private val renderer: BaseRenderer<out ItemModel, *, out RecyclerView.ViewHolder>,
         private val clicker: Clicker<*, out RecyclerView.ViewHolder>
     ) {
 
@@ -159,29 +142,32 @@ open class BaseRenderAdapter<ItemModel : Any>(
             private const val DEFAULT_VIEW_TYPE = 0
         }
 
-        fun build(): BaseRenderAdapter<ItemModel> {
-            val renderers = SparseArrayCompat<BaseRenderer<out ItemModel, *, out RecyclerView.ViewHolder>>(1)
-            renderers.put(DEFAULT_VIEW_TYPE, viewHolderRenderer)
 
-            val itemClickers = SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>(1)
-            itemClickers.put(DEFAULT_VIEW_TYPE, clicker)
+        fun buildAsync(itemCallback: DiffUtil.ItemCallback<ItemModel>) {
+            TODO()
+        }
 
-            return BaseRenderAdapter(
-                items = items,
-                differStrategy = diff,
-                itemIdSelector = itemIdSelector,
-                viewTypeSelector = { DEFAULT_VIEW_TYPE },
-                renderers = renderers,
-                clickers = itemClickers
-            ).apply {
-                setHasStableIds(hasStableIds)
-            }
+        fun build(differStrategy: DifferStrategy<ItemModel>): AbstractRenderAdapter<ItemModel> {
+            TODO()
+//            val renderers = SparseArrayCompat<BaseRenderer<out ItemModel, *, out RecyclerView.ViewHolder>>(1)
+//            renderers.put(DEFAULT_VIEW_TYPE, renderer)
+//
+//            val itemClickers = SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>(1)
+//            itemClickers.put(DEFAULT_VIEW_TYPE, clicker)
+//
+//            return BaseRenderAdapter(
+//                differStrategy = diff,
+//                itemIdSelector = itemIdSelector,
+//                viewTypeSelector = { DEFAULT_VIEW_TYPE },
+//                renderers = renderers,
+//                clickers = itemClickers
+//            ).apply {
+//                setHasStableIds(hasStableIds)
+//            }
         }
     }
 
     class MultipleViewTypesBuilder<ItemModel : Any>(
-        private val items: List<ItemModel>,
-        private val differStrategy: DifferStrategy<ItemModel>,
         private val itemIdSelector: (ItemModel) -> Long,
         private val hasStableIds: Boolean,
         private val viewTypeSelector: (ItemModel) -> Int
@@ -191,18 +177,13 @@ open class BaseRenderAdapter<ItemModel : Any>(
             SparseArrayCompat(3)
         private val clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>> = SparseArrayCompat(3)
 
-        fun add(
-            viewType: Int,
-            viewHolderRenderer: BaseRenderer<ItemModel, *, out RecyclerView.ViewHolder>
-        ): MultipleViewTypesBuilder<ItemModel> {
-            return add(viewType, viewHolderRenderer, Clickers.none())
-        }
-
         fun <E, VH : RecyclerView.ViewHolder> add(
             viewType: Int,
             viewHolderRenderer: BaseRenderer<ItemModel, E, VH>,
-            itemClicker: Clicker<E, VH>?
+            itemClicker: Clicker<E, VH> = Clickers.none()
         ): MultipleViewTypesBuilder<ItemModel> {
+            check(!renderers.containsKey(viewType)) { "" }
+            check(!clickers.containsKey(viewType)) { "" }
             renderers.put(viewType, viewHolderRenderer)
             clickers.put(viewType, itemClicker)
             return this
@@ -223,6 +204,54 @@ open class BaseRenderAdapter<ItemModel : Any>(
                 viewTypeSelector = viewTypeSelector,
                 renderers = renderers,
                 clickers = clickers
+            ).apply {
+                setHasStableIds(hasStableIds)
+            }
+        }
+    }
+
+    class SealedClassesTypesBuilder<ItemModel : Any>(
+        private val itemIdSelector: (ItemModel) -> Long,
+        private val hasStableIds: Boolean,
+        private val classViewTypeSelector: (KClass<out ItemModel>) -> Int
+    ) {
+
+        private val viewHolderRendererList: SparseArrayCompat<BaseRenderer<out ItemModel, *, out RecyclerView.ViewHolder>> =
+            SparseArrayCompat(3)
+        private val itemClickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>> = SparseArrayCompat(3)
+
+        fun <E, VH : RecyclerView.ViewHolder> add(
+            kClass: KClass<out ItemModel>,
+            viewHolderRenderer: BaseRenderer<out ItemModel, E, VH>,
+            itemClicker: Clicker<E, VH> = Clickers.none()
+        ): SealedClassesTypesBuilder<ItemModel> {
+            val viewType = classViewTypeSelector.invoke(kClass)
+            if (viewHolderRendererList.containsKey(viewType)) {
+                throw IllegalStateException("Builder already contains view holder renderer for view type = ${kClass.simpleName}")
+            }
+            if (itemClickers.containsKey(viewType)) {
+                throw IllegalStateException("Builder already contains item clicker for view type = ${kClass.simpleName}")
+            }
+            viewHolderRendererList.put(viewType, viewHolderRenderer)
+            itemClickers.put(viewType, itemClicker)
+            return this
+        }
+
+        fun build(): Adapter<ItemModel, *> {
+            if (viewHolderRendererList.isEmpty()) {
+                throw IllegalStateException("No one view holder renderer is registered")
+            }
+            if (itemClickers.isEmpty()) {
+                throw IllegalStateException("No one item clicker is registered")
+            }
+
+            return RenderAdapter(
+                items = items,
+                diff = diff,
+                itemIdSelector = itemIdSelector,
+                viewTypeSelector = { item -> classViewTypeSelector.invoke(item::class) },
+                viewHolderRendererList = viewHolderRendererList,
+                itemClickers = itemClickers
             ).apply {
                 setHasStableIds(hasStableIds)
             }

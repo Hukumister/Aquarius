@@ -1,9 +1,9 @@
-package ru.haroncode.recycler.kit.core.differ.strategies
+package ru.haroncode.recycler.kit.core.base.strategies
 
-import ru.haroncode.recycler.kit.core.differ.core.DifferStrategy
 import ru.haroncode.recycler.kit.core.observer.DataSourceObserver
 
-internal class NoneStrategy<T : Any> : DifferStrategy<T> {
+internal class NoneStrategy<T : Any> :
+    DifferStrategy<T> {
 
     override fun calculateDiff(
         previous: List<T>,
