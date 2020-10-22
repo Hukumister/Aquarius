@@ -16,10 +16,10 @@ class SimpleTextRenderer<Item> : BaseRenderer<Item, RenderContract, RecyclerView
     override fun getItem(itemModel: Item): RenderContract = itemModel as RenderContract
 
     override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): RecyclerView.ViewHolder {
-        return
+        TODO()
     }
 
     override fun onBindView(viewHolder: RecyclerView.ViewHolder, item: RenderContract) {
-        viewHolder.itemView.setBackgroundColor()
+        // TODO: 22.10.2020
     }
 }

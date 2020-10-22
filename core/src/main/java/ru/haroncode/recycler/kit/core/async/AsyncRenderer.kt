@@ -10,7 +10,7 @@ import ru.haroncode.recycler.kit.core.BaseRenderer
 import ru.haroncode.recycler.kit.core.Differ
 import ru.haroncode.recycler.kit.core.clicker.Clicker
 import ru.haroncode.recycler.kit.core.observer.AdapterDataSourceObserver
-import ru.haroncode.recycler.kit.core.observer.ComposeDataSourceObserver
+import ru.haroncode.recycler.kit.core.observer.DataSourceObserver
 import ru.haroncode.recycler.kit.core.observer.DataSourceUpdateCallback
 
 class AsyncRenderer<ItemModel : Any>(
@@ -20,29 +20,17 @@ class AsyncRenderer<ItemModel : Any>(
     viewTypeSelector: (ItemModel) -> Int,
     renderers: SparseArrayCompat<BaseRenderer<out ItemModel, *, out RecyclerView.ViewHolder>>
 ) : AbstractRenderAdapter<ItemModel>(
-    differ = AsyncDiffer(itemCallback),
     clickers = clickers,
     itemIdSelector = itemIdSelector,
     viewTypeSelector = viewTypeSelector,
     renderers = renderers
 ) {
 
-    init {
-        differ as AsyncDiffer
-        differ.dataSourceObserver.registerObserver(AdapterDataSourceObserver(this))
-    }
-
-
-    class Builder{
-
-
-    }
-
-
+    override val differ: Differ<ItemModel> = AsyncDiffer(itemCallback, AdapterDataSourceObserver(this))
 
     private class AsyncDiffer<T : Any>(
         itemCallback: DiffUtil.ItemCallback<T>,
-        val dataSourceObserver: ComposeDataSourceObserver = ComposeDataSourceObserver()
+        dataSourceObserver: DataSourceObserver
     ) : Differ<T> {
 
         private val asyncDiffer = AsyncListDiffer(

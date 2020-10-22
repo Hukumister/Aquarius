@@ -1,6 +1,7 @@
 package ru.haroncode.recycler.kit.core
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
@@ -34,4 +35,7 @@ abstract class BaseRenderer<ItemModel, RC, VH : RecyclerView.ViewHolder> {
     }
 
     open fun onRecycle(viewHolder: VH) = Unit
+
+
+    class BaseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 }
