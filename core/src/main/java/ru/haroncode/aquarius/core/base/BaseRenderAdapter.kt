@@ -2,7 +2,7 @@ package ru.haroncode.aquarius.core.base
 
 import androidx.collection.SparseArrayCompat
 import androidx.recyclerview.widget.RecyclerView
-import ru.haroncode.aquarius.core.BaseRenderAdapter
+import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.renderer.BaseRenderer
 import ru.haroncode.aquarius.core.Differ
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategy
@@ -11,13 +11,13 @@ import ru.haroncode.aquarius.core.observer.AdapterDataSourceObserver
 import ru.haroncode.aquarius.core.observer.DataSourceObserver
 import kotlin.reflect.KClass
 
-class RenderAdapter<T : Any>(
+class BaseRenderAdapter<T : Any>(
     differStrategy: DifferStrategy<T>,
     itemIdSelector: (T) -> Long,
     viewTypeSelector: (KClass<out T>) -> Int,
     clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
     renderers: SparseArrayCompat<BaseRenderer<out T, *, out RecyclerView.ViewHolder>>
-) : BaseRenderAdapter<T>(
+) : RenderAdapter<T>(
     itemIdSelector = itemIdSelector,
     viewTypeSelector = { itemModel -> viewTypeSelector(itemModel::class) },
     clickers = clickers,

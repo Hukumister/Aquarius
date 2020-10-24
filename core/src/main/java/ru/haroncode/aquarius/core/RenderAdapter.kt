@@ -7,7 +7,7 @@ import androidx.collection.SparseArrayCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.haroncode.aquarius.core.async.AsyncRenderAdapter
-import ru.haroncode.aquarius.core.base.RenderAdapter
+import ru.haroncode.aquarius.core.base.BaseRenderAdapter
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategies
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategy
 import ru.haroncode.aquarius.core.clicker.ClickableRenderer
@@ -16,7 +16,7 @@ import ru.haroncode.aquarius.core.clicker.Clickers
 import ru.haroncode.aquarius.core.renderer.BaseRenderer
 import kotlin.reflect.KClass
 
-abstract class BaseRenderAdapter<T : Any>(
+abstract class RenderAdapter<T : Any>(
     private val itemIdSelector: (T) -> Long,
     private val viewTypeSelector: (T) -> Int,
     private val clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
@@ -162,7 +162,7 @@ abstract class BaseRenderAdapter<T : Any>(
 
         fun build(
             differStrategy: DifferStrategy<T> = DifferStrategies.none()
-        ): BaseRenderAdapter<T> = RenderAdapter(
+        ): RenderAdapter<T> = BaseRenderAdapter(
             differStrategy = differStrategy,
             clickers = clickers,
             itemIdSelector = idSelector,
@@ -172,7 +172,7 @@ abstract class BaseRenderAdapter<T : Any>(
 
         fun buildAsync(
             itemCallback: DiffUtil.ItemCallback<T>
-        ): BaseRenderAdapter<T> = AsyncRenderAdapter(
+        ): RenderAdapter<T> = AsyncRenderAdapter(
             itemCallback = itemCallback,
             clickers = clickers,
             itemIdSelector = idSelector,

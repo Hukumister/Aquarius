@@ -2,7 +2,8 @@ package ru.haroncode.aquarius
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import ru.haroncode.aquarius.core.BaseRenderAdapter
+import ru.haroncode.aquarius.core.RenderAdapter
+import ru.haroncode.aquarius.core.base.strategies.DifferStrategies
 import ru.haroncode.aquarius.renderers.SimpleTextRenderer
 
 class MainActivity : AppCompatActivity() {
@@ -11,8 +12,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val buildSimple = BaseRenderAdapter.Builder<Item>()
+        val buildSimple = RenderAdapter.Builder<Item>()
             .renderer(Item.SimpleTextItem::class, SimpleTextRenderer())
-            .build()
+            .build(DifferStrategies.withDiffUtilComparable())
     }
 }

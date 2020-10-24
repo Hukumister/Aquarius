@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import ru.haroncode.aquarius.core.BaseRenderAdapter
+import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.Differ
 import ru.haroncode.aquarius.core.clicker.Clicker
 import ru.haroncode.aquarius.core.observer.AdapterDataSourceObserver
@@ -20,7 +20,7 @@ class AsyncRenderAdapter<T : Any>(
     viewTypeSelector: (KClass<out T>) -> Int,
     clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
     renderers: SparseArrayCompat<BaseRenderer<out T, *, out RecyclerView.ViewHolder>>
-) : BaseRenderAdapter<T>(
+) : RenderAdapter<T>(
     itemIdSelector = itemIdSelector,
     viewTypeSelector = { itemModel -> viewTypeSelector(itemModel::class) },
     clickers = clickers,
