@@ -1,9 +1,8 @@
 package ru.haroncode.aquarius.core.base.strategies
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.haroncode.aquarius.core.base.strategies.diffutil.ComparableDiffUtilItemCallback
-import ru.haroncode.aquarius.core.base.strategies.diffutil.ComparableItem
-import ru.haroncode.aquarius.core.base.strategies.diffutil.DiffUtilDifferStrategy
+import ru.haroncode.aquarius.core.diffutil.ComparableDiffUtilItemCallback
+import ru.haroncode.aquarius.core.diffutil.ComparableItem
 
 object DifferStrategies {
 

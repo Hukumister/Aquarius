@@ -18,7 +18,7 @@ import kotlin.reflect.KClass
 
 abstract class RenderAdapter<T : Any>(
     private val itemIdSelector: (T) -> Long,
-    private val viewTypeSelector: (T) -> Int,
+    private val viewTypeSelector: ViewTypeSelector<T>,
     private val clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
     private val renderers: SparseArrayCompat<BaseRenderer<out T, *, out RecyclerView.ViewHolder>>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -32,7 +32,7 @@ abstract class RenderAdapter<T : Any>(
 
     override fun getItemViewType(position: Int): Int {
         val itemModel = differ.currentList[position]
-        return viewTypeSelector(itemModel)
+        return viewTypeSelector.viewTypeFor(itemModel)
     }
 
     override fun getItemCount(): Int = differ.currentList.size
@@ -120,14 +120,14 @@ abstract class RenderAdapter<T : Any>(
         private var idSelector: (T) -> Long = { RecyclerView.NO_ID }
         private val renderers = SparseArrayCompat<BaseRenderer<out T, *, *>>()
         private val clickers = SparseArrayCompat<Clicker<*, *>>()
-        private var classViewTypeSelector: (KClass<out T>) -> Int = ClassViewTypeSelector()
+        private var classViewTypeSelector: ViewTypeSelector<KClass<out T>> = ClassViewTypeSelector()
 
         fun withIdSelector(selector: (T) -> Long): Builder<T> {
             idSelector = selector
             return this
         }
 
-        fun withViewTypeSelector(selector: (KClass<out T>) -> Int): Builder<T> {
+        fun withViewTypeSelector(selector: ViewTypeSelector<KClass<out T>>): Builder<T> {
             classViewTypeSelector = selector
             return this
         }
@@ -150,7 +150,7 @@ abstract class RenderAdapter<T : Any>(
             renderer: BaseRenderer<out T, E, VH>,
             itemClicker: Clicker<E, VH> = Clickers.none()
         ): Builder<T> {
-            val viewType = classViewTypeSelector.invoke(kClass)
+            val viewType = classViewTypeSelector.createViewTypeFor(kClass)
 
             check(!renderers.containsKey(viewType)) { "Builder already contains view holder renderer for view type = ${kClass.simpleName}" }
             check(!clickers.containsKey(viewType)) { "Builder already contains view holder clicker for view type = ${kClass.simpleName}" }

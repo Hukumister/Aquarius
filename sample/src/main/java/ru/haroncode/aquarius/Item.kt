@@ -1,6 +1,6 @@
 package ru.haroncode.aquarius
 
-import ru.haroncode.aquarius.core.base.strategies.diffutil.ComparableItem
+import ru.haroncode.aquarius.core.diffutil.ComparableItem
 import ru.haroncode.aquarius.renderers.SimpleTextRenderer
 
 sealed class Item : ComparableItem {
