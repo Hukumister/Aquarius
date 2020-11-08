@@ -13,10 +13,7 @@ class SimpleTextRenderer<Item> : ItemBaseRenderer<Item, RenderContract>() {
             get() = null
     }
 
-    override val layoutRes: Int
-        get() = R.layout.item_text
-
-    override fun getItem(itemModel: Item): RenderContract = itemModel as RenderContract
+    override val layoutRes: Int = R.layout.item_text
 
     override fun onBindView(viewHolder: BaseViewHolder, item: RenderContract) {
         viewHolder.itemView.title.text = item.title

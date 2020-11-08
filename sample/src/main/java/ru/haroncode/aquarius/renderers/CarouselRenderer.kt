@@ -24,10 +24,7 @@ class CarouselRenderer<Item> : ItemBaseRenderer<Item, RenderContract>() {
             .build(DifferStrategies.withDiffUtilComparable())
     }
 
-    override val layoutRes: Int
-        get() = R.layout.item_carousel
-
-    override fun getItem(itemModel: Item): RenderContract = itemModel as RenderContract
+    override val layoutRes: Int = R.layout.item_carousel
 
     override fun onBindView(viewHolder: BaseViewHolder, item: RenderContract) {
         val recyclerView = viewHolder.itemView.recyclerView

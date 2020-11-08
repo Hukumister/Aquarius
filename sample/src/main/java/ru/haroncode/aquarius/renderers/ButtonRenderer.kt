@@ -14,10 +14,7 @@ class ButtonRenderer<Item> : ItemBaseRenderer<Item, RenderContract>(), Clickable
         val title: String
     }
 
-    override val layoutRes: Int
-        get() = R.layout.item_button
-
-    override fun getItem(itemModel: Item): RenderContract = itemModel as RenderContract
+    override val layoutRes: Int = R.layout.item_button
 
     override fun onBindView(viewHolder: BaseViewHolder, item: RenderContract) {
         viewHolder.itemView.button.text = item.title

@@ -14,8 +14,6 @@ class ImageRenderer<Item>(
     override val layoutRes: Int
         get() = R.layout.item_image
 
-    override fun getItem(itemModel: Item): RenderContract = itemModel as RenderContract
-
     override fun onBindView(viewHolder: BaseViewHolder, item: RenderContract) {
         //TODO("load image")
     }
