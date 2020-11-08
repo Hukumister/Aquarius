@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 @Suppress("UNCHECKED_CAST")
-abstract class BaseRenderer<ItemModel, RC, VH : RecyclerView.ViewHolder> {
+abstract class BaseRenderer<T, RC, VH : RecyclerView.ViewHolder> {
 
-    abstract fun getItem(itemModel: ItemModel): RC
+    open fun getItem(itemModel: T): RC = itemModel as RC
 
     abstract fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): VH
 
@@ -22,13 +22,13 @@ abstract class BaseRenderer<ItemModel, RC, VH : RecyclerView.ViewHolder> {
         onRecycle(viewHolder)
     }
 
-    internal fun onBindItemModel(holder: RecyclerView.ViewHolder, itemModel: ItemModel) {
+    internal fun onBindItemModel(holder: RecyclerView.ViewHolder, itemModel: T) {
         val viewHolder = holder as VH
         val item = getItem(itemModel)
         onBindView(viewHolder, item)
     }
 
-    internal fun onBindItemModel(holder: RecyclerView.ViewHolder, itemModel: ItemModel, payloads: List<Any?>) {
+    internal fun onBindItemModel(holder: RecyclerView.ViewHolder, itemModel: T, payloads: List<Any?>) {
         val viewHolder = holder as VH
         val item = getItem(itemModel)
         onBindView(viewHolder, item, payloads)

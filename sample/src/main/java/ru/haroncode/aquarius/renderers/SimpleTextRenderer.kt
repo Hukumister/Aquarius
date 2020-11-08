@@ -10,8 +10,6 @@ class SimpleTextRenderer<Item> : ItemBaseRenderer<Item, RenderContract>() {
         val subtitle: String
     }
 
-    override fun getItem(itemModel: Item): RenderContract = itemModel as RenderContract
-
     override fun onBindView(viewHolder: BaseViewHolder, item: RenderContract) {
         TODO("Not yet implemented")
     }
