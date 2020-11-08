@@ -1,4 +1,4 @@
-package ru.haroncode.aquarius.core.base.strategies.diffutil
+package ru.haroncode.aquarius.core.diffutil
 
 import androidx.recyclerview.widget.DiffUtil
 

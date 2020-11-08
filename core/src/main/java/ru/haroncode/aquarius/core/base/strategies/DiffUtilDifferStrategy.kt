@@ -1,9 +1,8 @@
-package ru.haroncode.aquarius.core.base.strategies.diffutil
+package ru.haroncode.aquarius.core.base.strategies
 
 import androidx.recyclerview.widget.BatchingListUpdateCallback
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DiffUtil.DiffResult
-import ru.haroncode.aquarius.core.base.strategies.DifferStrategy
 import ru.haroncode.aquarius.core.observer.DataSourceObserver
 import ru.haroncode.aquarius.core.observer.DataSourceUpdateCallback
 
