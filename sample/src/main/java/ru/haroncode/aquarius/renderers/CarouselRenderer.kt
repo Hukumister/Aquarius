@@ -1,5 +1,8 @@
 package ru.haroncode.aquarius.renderers
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_carousel.view.*
 import ru.haroncode.aquarius.R
 import ru.haroncode.aquarius.core.RenderAdapter
@@ -26,11 +29,17 @@ class CarouselRenderer<Item> : ItemBaseRenderer<Item, RenderContract>() {
 
     override val layoutRes: Int = R.layout.item_carousel
 
-    override fun onBindView(viewHolder: BaseViewHolder, item: RenderContract) {
+    override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): BaseViewHolder {
+        val viewHolder = super.onCreateViewHolder(inflater, parent)
         val recyclerView = viewHolder.itemView.recyclerView
         if (recyclerView.adapter == null) {
+            recyclerView.layoutManager = LinearLayoutManager(viewHolder.itemView.context, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.adapter = itemAdapter
         }
+        return viewHolder
+    }
+
+    override fun onBindView(viewHolder: BaseViewHolder, item: RenderContract) {
         itemAdapter.differ.submitList(item.images)
     }
 }

@@ -32,15 +32,23 @@ class MainActivity : AppCompatActivity() {
             setHasFixedSize(true)
         }
 
-        itemAdapter.differ.submitList(buildItemList())
+        itemAdapter.differ.submitList(ItemFactory.staticItems())
     }
 
     private fun onClickButton(renderContract: ButtonRenderer.RenderContract) {
-        refreshAll()
+        if (renderContract.id == R.id.button_load_more) {
+            loadMore()
+        } else {
+            refreshAll()
+        }
+    }
+
+    private fun loadMore() {
+        itemAdapter.differ.submitList(itemAdapter.differ.currentList + ItemFactory.loadMore())
     }
 
     private fun refreshAll() {
-        itemAdapter.differ.submitList(buildItemList())
+        itemAdapter.differ.submitList(ItemFactory.staticItems())
     }
 
     override fun onDestroy() {
@@ -48,16 +56,4 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = null
     }
 
-    private fun buildItemList(): List<Item> {
-        val resultList = mutableListOf<Item>()
-        resultList += Item.Header
-        resultList += Item.Button("Update")
-        resultList += listOf(
-            Item.SimpleTextItem("title1", "subtitle1"),
-            Item.SimpleTextItem("title2", "subtitle2"),
-            Item.SimpleTextItem("title3", "subtitle3"),
-        )
-
-        return resultList
-    }
 }

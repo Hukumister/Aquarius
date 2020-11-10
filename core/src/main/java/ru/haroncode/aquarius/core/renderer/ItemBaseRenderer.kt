@@ -11,7 +11,7 @@ abstract class ItemBaseRenderer<ItemModel, RC> : BaseRenderer<ItemModel, RC, Bas
 
     @get:LayoutRes abstract val layoutRes: Int
 
-    final override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): BaseViewHolder {
+    override fun onCreateViewHolder(inflater: LayoutInflater, parent: ViewGroup): BaseViewHolder {
         return BaseViewHolder(inflater.inflate(layoutRes, parent, false))
     }
 
