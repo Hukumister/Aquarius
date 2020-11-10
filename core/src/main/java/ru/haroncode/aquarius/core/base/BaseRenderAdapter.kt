@@ -36,7 +36,7 @@ class BaseRenderAdapter<T : Any>(
         private val dataSourceObserver: DataSourceObserver
     ) : Differ<T> {
 
-        private val actualItems = arrayListOf<T>()
+        private var actualItems = emptyList<T>()
 
         override val currentList: List<T>
             get() = actualItems
@@ -44,6 +44,7 @@ class BaseRenderAdapter<T : Any>(
         override fun submitList(items: List<T>) {
             val calculateDiff = differStrategy.calculateDiff(actualItems, items)
             calculateDiff.dispatchUpdatesTo(dataSourceObserver)
+            actualItems = items
         }
     }
 }
