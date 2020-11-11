@@ -8,17 +8,20 @@ import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.clicker.DefaultClicker
 import ru.haroncode.aquarius.core.diffutil.ComparableDiffUtilItemCallback
 import ru.haroncode.aquarius.renderers.ButtonRenderer
+import ru.haroncode.aquarius.renderers.CardRenderer
 import ru.haroncode.aquarius.renderers.CarouselRenderer
 import ru.haroncode.aquarius.renderers.SimpleTextRenderer
+import ru.haroncode.aquarius.renderers.TitleRenderer
 
 class MainActivity : AppCompatActivity() {
 
     private val itemAdapter by lazy {
         RenderAdapter.Builder<Item>()
-            .renderer(Item.Header::class, SimpleTextRenderer())
+            .renderer(Item.Title::class, TitleRenderer())
             .renderer(Item.SimpleTextItem::class, SimpleTextRenderer())
             .renderer(Item.CarouselItem::class, CarouselRenderer())
             .renderer(Item.Button::class, ButtonRenderer(), DefaultClicker(::onClickButton))
+            .renderer(Item.CardItem::class, CardRenderer())
             .buildAsync(ComparableDiffUtilItemCallback())
     }
 
@@ -32,7 +35,7 @@ class MainActivity : AppCompatActivity() {
             setHasFixedSize(true)
         }
 
-        itemAdapter.differ.submitList(ItemFactory.staticItems())
+        itemAdapter.differ.submitList(ItemFactory.staticItems(this))
     }
 
     private fun onClickButton(renderContract: ButtonRenderer.RenderContract) {
@@ -48,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshAll() {
-        itemAdapter.differ.submitList(ItemFactory.staticItems())
+        itemAdapter.differ.submitList(ItemFactory.staticItems(this))
     }
 
     override fun onDestroy() {

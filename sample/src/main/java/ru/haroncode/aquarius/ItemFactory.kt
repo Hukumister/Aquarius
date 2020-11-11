@@ -1,44 +1,45 @@
 package ru.haroncode.aquarius
 
+import android.content.Context
 import ru.haroncode.aquarius.renderers.CarouselRenderer.ImageItem
+import java.util.*
 
 object ItemFactory {
 
-    fun staticItems(): List<Item> {
+    fun staticItems(context: Context): List<Item> {
         val resultList = mutableListOf<Item>()
-        resultList += Item.Header
-        resultList += Item.Button("Update")
-        resultList += listOf(
-            Item.SimpleTextItem("title1", "subtitle1"),
-            Item.SimpleTextItem("title2", "subtitle2"),
-            Item.SimpleTextItem("title3", "subtitle3"),
-        )
-
-        resultList += Item.SimpleTextItem("Carousel")
+        resultList += Item.Title(R.string.lorem_title)
+        resultList += Item.Button(context.getString(R.string.update))
+        resultList += generateSimpleTextItems(context)
+        resultList += generateCardItems(context)
+        resultList += Item.SimpleTextItem(context.getString(R.string.carousel))
         resultList += carousel()
-        resultList += Item.Button("LoadMore", R.id.button_load_more)
+
+        resultList += Item.Button(context.getString(R.string.load_more), R.id.button_load_more)
+
         return resultList
     }
 
+    private fun generateSimpleTextItems(context: Context, count: Int = 5): List<Item> {
+        val simpleTextItem = Item.SimpleTextItem(
+            context.getString(R.string.lorem_title),
+            context.getString(R.string.lorem_subtitle)
+        )
+        return Collections.nCopies(count, simpleTextItem)
+    }
+
+    private fun generateCardItems(context: Context, count: Int = 5): List<Item> {
+        val simpleTextItem = Item.CardItem(
+            context.getString(R.string.lorem_title),
+            context.getString(R.string.lorem_subtitle)
+        )
+        return Collections.nCopies(count, simpleTextItem)
+    }
 
     fun loadMore(): List<Item> {
         val resultList = mutableListOf<Item>()
-        resultList += listOf(
-            Item.SimpleTextItem("title1", "subtitle1"),
-            Item.SimpleTextItem("title2", "subtitle2"),
-            Item.SimpleTextItem("title3", "subtitle3"),
-            Item.SimpleTextItem("title3", "subtitle3"),
-            Item.SimpleTextItem("title3", "subtitle3"),
-
-        )
-
-        resultList += Item.SimpleTextItem("Carousel")
+        resultList += Item.Title(R.string.carousel)
         resultList += carousel()
-        resultList += carousel()
-        resultList += carousel()
-        resultList += carousel()
-        resultList += carousel()
-
         return resultList
     }
 
