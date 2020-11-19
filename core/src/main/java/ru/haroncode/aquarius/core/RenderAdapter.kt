@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.collection.SparseArrayCompat
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ru.haroncode.aquarius.core.async.AsyncRenderAdapter
 import ru.haroncode.aquarius.core.base.BaseRenderAdapter
@@ -13,17 +14,32 @@ import ru.haroncode.aquarius.core.base.strategies.DifferStrategy
 import ru.haroncode.aquarius.core.clicker.ClickableRenderer
 import ru.haroncode.aquarius.core.clicker.Clicker
 import ru.haroncode.aquarius.core.clicker.Clickers
+import ru.haroncode.aquarius.core.helper.ItemTouchHelperAdapter
+import ru.haroncode.aquarius.core.helper.RenderItemTouchHelperCallback
 import ru.haroncode.aquarius.core.renderer.BaseRenderer
 import kotlin.reflect.KClass
 
 abstract class RenderAdapter<T : Any>(
     private val itemIdSelector: (T) -> Long,
+    private val touchHelperCallback: RenderItemTouchHelperCallback,
     private val viewTypeSelector: ViewTypeSelector<T>,
     private val clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
     private val renderers: SparseArrayCompat<BaseRenderer<out T, *, out RecyclerView.ViewHolder>>,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemTouchHelperAdapter {
 
     abstract val differ: Differ<T>
+
+    private val itemTouchHelper = ItemTouchHelper(touchHelperCallback)
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        touchHelperCallback.attachAdapter(this)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) = differ.swap(fromPosition, toPosition)
+
+    override fun onItemDismiss(position: Int, direction: Int) = differ.removeAtPosition(position)
 
     override fun getItemId(position: Int): Long {
         val itemModel = differ.currentList[position]
@@ -53,7 +69,7 @@ abstract class RenderAdapter<T : Any>(
         renderer.onBindItemModel(viewHolder, itemModel)
     }
 
-    private fun <VH : RecyclerView.ViewHolder> findRenderer(itemViewType: Int): BaseRenderer<T, Any, VH> {
+    fun <VH : RecyclerView.ViewHolder> findRenderer(itemViewType: Int): BaseRenderer<T, Any, VH> {
         @Suppress("UNCHECKED_CAST")
         val renderer = renderers.get(itemViewType) as? BaseRenderer<T, Any, VH>
         return checkNotNull(renderer) { "Unknown view type=$itemViewType" }
@@ -73,7 +89,7 @@ abstract class RenderAdapter<T : Any>(
         itemClicker.onBindClicker(viewHolder)
     }
 
-    private fun <VH : RecyclerView.ViewHolder> findItemClicker(itemViewType: Int): Clicker<Any, VH> {
+    fun <VH : RecyclerView.ViewHolder> findItemClicker(itemViewType: Int): Clicker<Any, VH> {
         @Suppress("UNCHECKED_CAST")
         val itemClicker = clickers.get(itemViewType) as? Clicker<Any, VH>
         return checkNotNull(itemClicker) { "Unknown view type=$itemViewType" }
@@ -117,10 +133,15 @@ abstract class RenderAdapter<T : Any>(
 
     class Builder<T : Any> {
 
+        private var touchHelperCallback: RenderItemTouchHelperCallback = RenderItemTouchHelperCallback()
         private var idSelector: (T) -> Long = { RecyclerView.NO_ID }
         private val renderers = SparseArrayCompat<BaseRenderer<out T, *, *>>()
         private val clickers = SparseArrayCompat<Clicker<*, *>>()
         private var classViewTypeSelector: ViewTypeSelector<KClass<out T>> = ClassViewTypeSelector()
+
+        fun withItemCallBack(itemCallback: RenderItemTouchHelperCallback) {
+            touchHelperCallback = itemCallback
+        }
 
         fun withIdSelector(selector: (T) -> Long): Builder<T> {
             idSelector = selector
@@ -167,7 +188,8 @@ abstract class RenderAdapter<T : Any>(
             clickers = clickers,
             itemIdSelector = idSelector,
             viewTypeSelector = classViewTypeSelector,
-            renderers = renderers
+            renderers = renderers,
+            touchHelperCallback = touchHelperCallback
         )
 
         fun buildAsync(
@@ -177,7 +199,8 @@ abstract class RenderAdapter<T : Any>(
             clickers = clickers,
             itemIdSelector = idSelector,
             viewTypeSelector = classViewTypeSelector,
-            renderers = renderers
+            renderers = renderers,
+            touchHelperCallback = touchHelperCallback
         )
     }
 }

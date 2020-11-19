@@ -9,6 +9,7 @@ import ru.haroncode.aquarius.core.Differ
 import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.ViewTypeSelector
 import ru.haroncode.aquarius.core.clicker.Clicker
+import ru.haroncode.aquarius.core.helper.RenderItemTouchHelperCallback
 import ru.haroncode.aquarius.core.observer.AdapterDataSourceObserver
 import ru.haroncode.aquarius.core.observer.DataSourceObserver
 import ru.haroncode.aquarius.core.observer.DataSourceUpdateCallback
@@ -18,6 +19,7 @@ import kotlin.reflect.KClass
 class AsyncRenderAdapter<T : Any>(
     itemCallback: DiffUtil.ItemCallback<T>,
     itemIdSelector: (T) -> Long,
+    touchHelperCallback: RenderItemTouchHelperCallback,
     viewTypeSelector: ViewTypeSelector<KClass<out T>>,
     clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
     renderers: SparseArrayCompat<BaseRenderer<out T, *, out RecyclerView.ViewHolder>>
@@ -29,7 +31,8 @@ class AsyncRenderAdapter<T : Any>(
         override fun viewTypeFor(item: T): Int = viewTypeSelector.viewTypeFor(item::class)
     },
     clickers = clickers,
-    renderers = renderers
+    renderers = renderers,
+    touchHelperCallback = touchHelperCallback
 ) {
 
     override val differ: Differ<T> = AsyncDiffer(itemCallback, AdapterDataSourceObserver(this))
@@ -50,5 +53,13 @@ class AsyncRenderAdapter<T : Any>(
         override fun submitList(items: List<T>) {
             asyncDiffer.submitList(items)
         }
+
+        override fun removeAtPosition(position: Int) {
+            val newList = currentList.toMutableList().apply { removeAt(position) }
+            asyncDiffer.submitList(newList)
+        }
+
+        //Drag and drop unsupported in async differ
+        override fun swap(fromPosition: Int, toPosition: Int) = Unit
     }
 }

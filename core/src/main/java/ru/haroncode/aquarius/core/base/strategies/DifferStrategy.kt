@@ -1,10 +1,20 @@
 package ru.haroncode.aquarius.core.base.strategies
 
+import ru.haroncode.aquarius.core.base.strategies.results.MoveRangeResult
+import ru.haroncode.aquarius.core.base.strategies.results.RemoveRangeResult
 import ru.haroncode.aquarius.core.observer.DataSourceObserver
 
-interface DifferStrategy<T> {
+abstract class DifferStrategy<T> {
 
-    fun calculateDiff(previous: List<T>, actual: List<T>): Result
+    open fun removeAtPosition(position: Int): Result {
+        return RemoveRangeResult(position, 1)
+    }
+
+    open fun swap(fromPosition: Int, toPosition: Int): Result {
+        return MoveRangeResult(fromPosition, toPosition)
+    }
+
+    abstract fun calculateDiff(previous: List<T>, actual: List<T>): Result
 
     interface Result {
 
