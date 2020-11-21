@@ -29,11 +29,14 @@ object ItemFactory {
     }
 
     private fun generateCardItems(context: Context, count: Int = 5): List<Item> {
-        val simpleTextItem = Item.CardItem(
-            context.getString(R.string.lorem_title),
-            context.getString(R.string.lorem_subtitle)
-        )
-        return Collections.nCopies(count, simpleTextItem)
+        val result = mutableListOf<Item>()
+        for (index in 0 until count) {
+            result += Item.CardItem(
+                context.getString(R.string.lorem_title),
+                context.getString(R.string.lorem_subtitle)
+            )
+        }
+        return result
     }
 
     fun loadMore(): List<Item> {

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.haroncode.aquarius.core.RenderAdapter
+import ru.haroncode.aquarius.core.base.strategies.DifferStrategies
 import ru.haroncode.aquarius.core.clicker.DefaultClicker
 import ru.haroncode.aquarius.core.diffutil.ComparableDiffUtilItemCallback
 import ru.haroncode.aquarius.renderers.ButtonRenderer
@@ -22,7 +23,8 @@ class MainActivity : AppCompatActivity() {
             .renderer(Item.CarouselItem::class, CarouselRenderer())
             .renderer(Item.Button::class, ButtonRenderer(), DefaultClicker(::onClickButton))
             .renderer(Item.CardItem::class, CardRenderer())
-            .buildAsync(ComparableDiffUtilItemCallback())
+//            .buildAsync(ComparableDiffUtilItemCallback())
+            .build(DifferStrategies.withDiffUtilComparable())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -2,18 +2,17 @@ package ru.haroncode.aquarius.core.base.strategies
 
 import ru.haroncode.aquarius.core.observer.DataSourceObserver
 
-internal class NoneStrategy<T : Any> :
-    DifferStrategy<T> {
+internal class NoneStrategy<T : Any> : DifferStrategy<T>() {
 
     override fun calculateDiff(
         previous: List<T>,
         actual: List<T>
-    ): DifferStrategy.Result = NoneDiffResult(previous.size, actual.size)
+    ): Result = NoneDiffResult(previous.size, actual.size)
 
     private class NoneDiffResult(
         private val previousCount: Int,
         private val actualCount: Int
-    ) : DifferStrategy.Result {
+    ) : Result {
 
         override fun dispatchUpdatesTo(
             dataSourceObserver: DataSourceObserver

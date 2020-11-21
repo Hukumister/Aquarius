@@ -9,9 +9,9 @@ import ru.haroncode.aquarius.core.observer.DataSourceUpdateCallback
 class DiffUtilDifferStrategy<T : Any>(
     private val itemCallback: DiffUtil.ItemCallback<T>,
     private val detectMoves: Boolean = false
-) : DifferStrategy<T> {
+) : DifferStrategy<T>() {
 
-    override fun calculateDiff(previous: List<T>, actual: List<T>): DifferStrategy.Result {
+    override fun calculateDiff(previous: List<T>, actual: List<T>): Result {
         return if (previous.isNotEmpty()) {
             val callback = SimpleDiffCallback(itemCallback, previous, actual)
             val result = DiffUtil.calculateDiff(callback, detectMoves)
@@ -49,7 +49,7 @@ class DiffUtilDifferStrategy<T : Any>(
 
     private class DiffUtilResult(
         private val diffResult: DiffResult
-    ) : DifferStrategy.Result {
+    ) : Result {
 
         override fun dispatchUpdatesTo(dataSourceObserver: DataSourceObserver) {
             val adapterListUpdateCallback = DataSourceUpdateCallback(dataSourceObserver)
@@ -61,7 +61,7 @@ class DiffUtilDifferStrategy<T : Any>(
     private class InsertRangeResult(
         private val position: Int,
         private val count: Int
-    ) : DifferStrategy.Result {
+    ) : Result {
 
         override fun dispatchUpdatesTo(dataSourceObserver: DataSourceObserver) {
             dataSourceObserver.onItemRangeInserted(position, count)
