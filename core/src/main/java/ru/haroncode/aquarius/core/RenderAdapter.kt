@@ -14,7 +14,6 @@ import ru.haroncode.aquarius.core.base.strategies.DifferStrategy
 import ru.haroncode.aquarius.core.clicker.ClickableRenderer
 import ru.haroncode.aquarius.core.clicker.Clicker
 import ru.haroncode.aquarius.core.clicker.Clickers
-import ru.haroncode.aquarius.core.helper.ItemTouchHelperAdapter
 import ru.haroncode.aquarius.core.helper.RenderItemTouchHelperCallback
 import ru.haroncode.aquarius.core.renderer.BaseRenderer
 import kotlin.reflect.KClass
@@ -25,7 +24,7 @@ abstract class RenderAdapter<T : Any>(
     private val viewTypeSelector: ViewTypeSelector<T>,
     private val clickers: SparseArrayCompat<Clicker<*, out RecyclerView.ViewHolder>>,
     private val renderers: SparseArrayCompat<BaseRenderer<out T, *, out RecyclerView.ViewHolder>>,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemTouchHelperAdapter {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     abstract val differ: Differ<T>
 
@@ -37,9 +36,9 @@ abstract class RenderAdapter<T : Any>(
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
-    override fun onItemMove(fromPosition: Int, toPosition: Int) = differ.swap(fromPosition, toPosition)
+    open fun onItemMove(fromPosition: Int, toPosition: Int) = differ.swap(fromPosition, toPosition)
 
-    override fun onItemDismiss(position: Int, direction: Int) = differ.removeAtPosition(position)
+    open fun onItemDismiss(position: Int, direction: Int) = differ.removeAtPosition(position)
 
     override fun getItemId(position: Int): Long {
         val itemModel = differ.currentList[position]

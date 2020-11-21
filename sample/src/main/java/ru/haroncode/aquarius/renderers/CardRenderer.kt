@@ -1,11 +1,17 @@
 package ru.haroncode.aquarius.renderers
 
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_card.view.*
 import ru.haroncode.aquarius.R
+import ru.haroncode.aquarius.core.motion.Draggable
+import ru.haroncode.aquarius.core.motion.Swipable
 import ru.haroncode.aquarius.core.renderer.ItemBaseRenderer
 import ru.haroncode.aquarius.renderers.CardRenderer.RenderContract
 
-class CardRenderer<Item> : ItemBaseRenderer<Item, RenderContract>() {
+class CardRenderer<Item> : ItemBaseRenderer<Item, RenderContract>(),
+    Swipable,
+    Draggable {
 
     interface RenderContract {
         val title: CharSequence
@@ -21,4 +27,15 @@ class CardRenderer<Item> : ItemBaseRenderer<Item, RenderContract>() {
             itemView.subtitle.text = item.subtitle
         }
     }
+
+
+    override fun swipeDir(viewHolder: RecyclerView.ViewHolder): Int = ItemTouchHelper.END or ItemTouchHelper.START
+
+    override fun onSwiping(viewHolder: RecyclerView.ViewHolder, dX: Float, currentlyActive: Boolean) {
+        val width = viewHolder.itemView.width.toFloat()
+        val alpha = 1.0f - Math.abs(dX) / width
+        viewHolder.itemView.alpha = alpha
+    }
+
+    override fun dragDir(viewHolder: RecyclerView.ViewHolder): Int = ItemTouchHelper.UP or ItemTouchHelper.DOWN
 }

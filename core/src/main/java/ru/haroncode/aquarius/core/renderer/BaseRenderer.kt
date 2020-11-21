@@ -13,9 +13,7 @@ abstract class BaseRenderer<T, RC, VH : RecyclerView.ViewHolder> {
 
     abstract fun onBindView(viewHolder: VH, item: RC)
 
-    open fun swipeDir(viewHolder: VH): Int = 0
-
-    open fun dragDir(viewHolder: VH): Int = 0
+    open fun onStopMoving(viewHolder: VH) = Unit
 
     open fun onBindView(viewHolder: VH, item: RC, payloads: List<Any?>) {
         onBindView(viewHolder, item)
