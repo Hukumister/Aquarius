@@ -2,7 +2,7 @@ package ru.haroncode.aquarius.core.motion
 
 import androidx.recyclerview.widget.RecyclerView
 
-interface Swipable {
+interface SwipableRenderer {
 
     fun swipeDir(viewHolder: RecyclerView.ViewHolder): Int
 

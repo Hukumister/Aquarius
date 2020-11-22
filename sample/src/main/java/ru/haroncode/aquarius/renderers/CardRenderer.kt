@@ -4,14 +4,16 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_card.view.*
 import ru.haroncode.aquarius.R
-import ru.haroncode.aquarius.core.motion.Draggable
-import ru.haroncode.aquarius.core.motion.Swipable
+import ru.haroncode.aquarius.core.clicker.ClickableRenderer
+import ru.haroncode.aquarius.core.motion.DraggableRenderer
+import ru.haroncode.aquarius.core.motion.SwipableRenderer
 import ru.haroncode.aquarius.core.renderer.ItemBaseRenderer
 import ru.haroncode.aquarius.renderers.CardRenderer.RenderContract
 
 class CardRenderer<Item> : ItemBaseRenderer<Item, RenderContract>(),
-    Swipable,
-    Draggable {
+    ClickableRenderer,
+    SwipableRenderer,
+    DraggableRenderer {
 
     interface RenderContract {
         val title: CharSequence

@@ -2,7 +2,7 @@ package ru.haroncode.aquarius.core.motion
 
 import androidx.recyclerview.widget.RecyclerView
 
-interface Draggable {
+interface DraggableRenderer {
 
     fun dragDir(viewHolder: RecyclerView.ViewHolder): Int
 

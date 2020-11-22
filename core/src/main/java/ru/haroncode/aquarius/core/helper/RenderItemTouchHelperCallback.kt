@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
 import androidx.recyclerview.widget.RecyclerView
 import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.async.AsyncRenderAdapter
-import ru.haroncode.aquarius.core.motion.Draggable
-import ru.haroncode.aquarius.core.motion.Swipable
+import ru.haroncode.aquarius.core.motion.DraggableRenderer
+import ru.haroncode.aquarius.core.motion.SwipableRenderer
 
 open class RenderItemTouchHelperCallback : ItemTouchHelper.Callback() {
 
@@ -30,10 +30,10 @@ open class RenderItemTouchHelperCallback : ItemTouchHelper.Callback() {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
         val baseRenderer = renderAdapter.findRenderer<RecyclerView.ViewHolder>(viewHolder.itemViewType)
         when {
-            actionState == ACTION_STATE_DRAG && baseRenderer is Draggable -> {
+            actionState == ACTION_STATE_DRAG && baseRenderer is DraggableRenderer -> {
                 baseRenderer.onDragging(viewHolder, dX, dY, isCurrentlyActive)
             }
-            actionState == ACTION_STATE_SWIPE && baseRenderer is Swipable -> {
+            actionState == ACTION_STATE_SWIPE && baseRenderer is SwipableRenderer -> {
                 baseRenderer.onSwiping(viewHolder, dX, isCurrentlyActive)
             }
         }
@@ -55,8 +55,8 @@ open class RenderItemTouchHelperCallback : ItemTouchHelper.Callback() {
     private fun onSelectedChangedInternal(viewHolder: RecyclerView.ViewHolder, actionState: Int) {
         val baseRenderer = renderAdapter.findRenderer<RecyclerView.ViewHolder>(viewHolder.itemViewType)
         when {
-            actionState == ACTION_STATE_DRAG && baseRenderer is Draggable -> baseRenderer.onItemStartDrag(viewHolder)
-            actionState == ACTION_STATE_SWIPE && baseRenderer is Swipable -> baseRenderer.onItemStartSwipe(viewHolder)
+            actionState == ACTION_STATE_DRAG && baseRenderer is DraggableRenderer -> baseRenderer.onItemStartDrag(viewHolder)
+            actionState == ACTION_STATE_SWIPE && baseRenderer is SwipableRenderer -> baseRenderer.onItemStartSwipe(viewHolder)
         }
     }
 
@@ -66,8 +66,8 @@ open class RenderItemTouchHelperCallback : ItemTouchHelper.Callback() {
     ): Int {
         val baseRenderer = renderAdapter.findRenderer<RecyclerView.ViewHolder>(viewHolder.itemViewType)
         val supportDragAndDrop = renderAdapter !is AsyncRenderAdapter
-        val dragFlags = if (supportDragAndDrop && baseRenderer is Draggable) baseRenderer.dragDir(viewHolder) else 0
-        val swipeFlags = if (baseRenderer is Swipable) baseRenderer.swipeDir(viewHolder) else 0
+        val dragFlags = if (supportDragAndDrop && baseRenderer is DraggableRenderer) baseRenderer.dragDir(viewHolder) else 0
+        val swipeFlags = if (baseRenderer is SwipableRenderer) baseRenderer.swipeDir(viewHolder) else 0
         return makeMovementFlags(dragFlags, swipeFlags)
     }
 
