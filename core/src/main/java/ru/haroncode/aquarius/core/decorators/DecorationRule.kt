@@ -2,7 +2,7 @@ package ru.haroncode.aquarius.core.decorators
 
 import androidx.recyclerview.widget.RecyclerView
 
-interface DecoratorRule {
+interface DecorationRule {
     /**
      * Можем ли мы применить это правило для элемента по данному номеру
      */

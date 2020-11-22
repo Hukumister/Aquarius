@@ -40,11 +40,10 @@ class MainActivity : AppCompatActivity() {
                     end = 16.dp
                 )
             ) {
-                any({
+                any {
                     first()
-                }, {
                     last()
-                })
+                }
             }
             .create()
 

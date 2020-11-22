@@ -4,32 +4,32 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.haroncode.aquarius.core.RenderAdapter
 import kotlin.reflect.KClass
 
-data class AndRule(val rules: List<DecoratorRule>) : DecoratorRule {
+data class AndRule(val rules: List<DecorationRule>) : DecorationRule {
 
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean =
         rules.all { rule -> rule.resolve(adapterPosition, parent) }
 
-    override fun weight(): Int = rules.sumBy(DecoratorRule::weight)
+    override fun weight(): Int = rules.sumBy(DecorationRule::weight)
 
 }
 
-data class OrRule(val rules: List<DecoratorRule>) : DecoratorRule {
+data class OrRule(val rules: List<DecorationRule>) : DecorationRule {
 
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean =
         rules.any { rule -> rule.resolve(adapterPosition, parent) }
 
-    override fun weight(): Int = rules.sumBy(DecoratorRule::weight)
+    override fun weight(): Int = rules.sumBy(DecorationRule::weight)
 
 }
 
-data class PositionRule(val positions: Set<Int>) : DecoratorRule {
+data class PositionRule(val positions: Set<Int>) : DecorationRule {
 
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean = adapterPosition in positions
 
     override fun weight(): Int = 1
 }
 
-data class ClassViewTypeRule(val viewTypes: Set<KClass<*>>) : DecoratorRule {
+data class KlassViewTypeRule(val viewTypes: Set<KClass<*>>) : DecorationRule {
 
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean {
         val baseRenderAdapter = parent.adapter as? RenderAdapter<*> ?: return false
@@ -41,7 +41,7 @@ data class ClassViewTypeRule(val viewTypes: Set<KClass<*>>) : DecoratorRule {
     override fun weight(): Int = 1
 }
 
-data class ViewTypeRule(val viewTypes: Set<Int>) : DecoratorRule {
+data class ViewTypeRule(val viewTypes: Set<Int>) : DecorationRule {
 
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean =
         adapterPosition != RecyclerView.NO_POSITION && parent.adapter?.getItemViewType(adapterPosition) in viewTypes
@@ -50,7 +50,7 @@ data class ViewTypeRule(val viewTypes: Set<Int>) : DecoratorRule {
 
 }
 
-data class NextRule(val rule: DecoratorRule) : DecoratorRule {
+data class NextRule(val rule: DecorationRule) : DecorationRule {
 
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean {
         val nextAdapterPosition = adapterPosition + 1
@@ -61,7 +61,7 @@ data class NextRule(val rule: DecoratorRule) : DecoratorRule {
 
 }
 
-data class PrevRule(val rule: DecoratorRule) : DecoratorRule {
+data class PrevRule(val rule: DecorationRule) : DecorationRule {
 
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean {
         val previousAdapterPosition = adapterPosition - 1
@@ -72,7 +72,7 @@ data class PrevRule(val rule: DecoratorRule) : DecoratorRule {
 
 }
 
-data class NotRule(val rule: DecoratorRule) : DecoratorRule {
+data class NotRule(val rule: DecorationRule) : DecorationRule {
 
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean = !rule.resolve(adapterPosition, parent)
 
@@ -80,7 +80,7 @@ data class NotRule(val rule: DecoratorRule) : DecoratorRule {
 
 }
 
-class LastRule : DecoratorRule {
+class LastRule : DecorationRule {
 
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean =
         adapterPosition == parent.adapter?.itemCount?.let { itemCount -> itemCount - 1 }
@@ -88,7 +88,7 @@ class LastRule : DecoratorRule {
     override fun weight(): Int = 1
 }
 
-class AnyRule : DecoratorRule {
+class AnyRule : DecorationRule {
 
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean = true
 

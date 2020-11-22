@@ -11,7 +11,7 @@ abstract class RuleItemDecoration<T>(
 ) : RecyclerView.ItemDecoration() {
 
     data class RuleWithParams<T>(
-        val rule: DecoratorRule,
+        val rule: DecorationRule,
         val param: T
     )
 

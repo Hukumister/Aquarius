@@ -101,9 +101,9 @@ class SpaceDecoration private constructor(
 
         fun addRule(
             param: Param,
-            ruleBuilder: DecoratorRuleBuilder<T>.() -> Unit = { any() }
+            ruleBuilder: DecorationRuleBuilder<T>.() -> Unit = { any() }
         ): Builder<T> {
-            val rule = DecoratorRuleBuilder<T>()
+            val rule = DecorationRuleBuilder<T>()
                 .apply(ruleBuilder)
                 .create()
             ruleWithParams.add(RuleWithParams(rule, param))
