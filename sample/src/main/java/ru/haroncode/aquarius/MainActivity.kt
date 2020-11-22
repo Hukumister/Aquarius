@@ -7,12 +7,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategies
 import ru.haroncode.aquarius.core.clicker.DefaultClicker
-import ru.haroncode.aquarius.core.diffutil.ComparableDiffUtilItemCallback
+import ru.haroncode.aquarius.core.decorators.SpaceDecoration
 import ru.haroncode.aquarius.renderers.ButtonRenderer
 import ru.haroncode.aquarius.renderers.CardRenderer
 import ru.haroncode.aquarius.renderers.CarouselRenderer
 import ru.haroncode.aquarius.renderers.SimpleTextRenderer
 import ru.haroncode.aquarius.renderers.TitleRenderer
+import ru.haroncode.aquarius.utils.dp
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,10 +32,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val spaceDecoration = SpaceDecoration.Builder<Item>()
+            .addRule(
+                SpaceDecoration.Param(
+                    top = 8.dp,
+                    start = 16.dp,
+                    end = 16.dp
+                )
+            ) {
+                any({
+                    first()
+                }, {
+                    last()
+                })
+            }
+            .create()
+
         with(recyclerView) {
             adapter = itemAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
             setHasFixedSize(true)
+
+            addItemDecoration(spaceDecoration)
         }
 
         itemAdapter.differ.submitList(ItemFactory.staticItems(this))
