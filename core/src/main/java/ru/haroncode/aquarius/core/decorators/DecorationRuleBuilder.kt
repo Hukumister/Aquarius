@@ -40,10 +40,10 @@ class DecorationRuleBuilder<T : Any> {
         return rules.add(appliedForPrevRule)
     }
 
-    fun any(builders: DecorationRuleBuilder<T>.() -> Unit): Boolean {
+    fun oneOf(builders: DecorationRuleBuilder<T>.() -> Unit): Boolean {
         val rulesList = DecorationRuleBuilder<T>()
             .apply(builders)
-            .createOr()
+            .createInternal(::OrRule)
         return rules.add(rulesList)
     }
 
@@ -56,7 +56,9 @@ class DecorationRuleBuilder<T : Any> {
 
     fun any() = rules.add(AnyRule())
 
-    fun create(): DecorationRule = AndRule(rules)
+    fun create() = createInternal(::AndRule)
 
-    fun createOr(): DecorationRule = OrRule(rules)
+    private inline fun createInternal(
+        block: (List<DecorationRule>) -> DecorationRule
+    ): DecorationRule = block(rules)
 }

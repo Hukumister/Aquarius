@@ -2,6 +2,7 @@ package ru.haroncode.aquarius
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.haroncode.aquarius.core.RenderAdapter
@@ -33,20 +34,20 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val spaceDecoration = SpaceDecoration.Builder<Item>()
-            .addRule(
-                SpaceDecoration.Param(
-                    top = 8.dp,
-                    start = 16.dp,
-                    end = 16.dp
-                )
-            ) {
-                any {
-                    first()
-                    last()
+            .addRule {
+                start = 16.dp
+                end = 16.dp
+
+                with {
+                    oneOf {
+                        first()
+                        last()
+                    }
                 }
             }
             .create()
 
+        DividerItemDecoration
         with(recyclerView) {
             adapter = itemAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)

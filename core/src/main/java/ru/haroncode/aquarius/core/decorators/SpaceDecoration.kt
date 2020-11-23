@@ -67,20 +67,12 @@ class SpaceDecoration private constructor(
         val top: Int = 0,
         val end: Int = 0,
         val bottom: Int = 0,
+
         val startContainer: Int = start,
         val topContainer: Int = top,
         val endContainer: Int = end,
         val bottomContainer: Int = bottom
-    ) {
-
-        constructor(vertical: Int = 0, horizontal: Int = 0) : this(
-            start = horizontal,
-            end = horizontal,
-            top = vertical,
-            bottom = vertical
-        )
-
-    }
+    )
 
     class Builder<T : Any> {
 
@@ -100,16 +92,51 @@ class SpaceDecoration private constructor(
         }
 
         fun addRule(
-            param: Param,
-            ruleBuilder: DecorationRuleBuilder<T>.() -> Unit = { any() }
+            block: ParamBuilder<T>.() -> Unit
         ): Builder<T> {
-            val rule = DecorationRuleBuilder<T>()
-                .apply(ruleBuilder)
+            val ruleWithParam = ParamBuilder<T>()
+                .apply(block)
                 .create()
-            ruleWithParams.add(RuleWithParams(rule, param))
+            ruleWithParams.add(ruleWithParam)
             return this
         }
 
         fun create() = SpaceDecoration(ruleWithParams, spanCount, orientation)
+
+        class ParamBuilder<T : Any> {
+
+            var start: Int = 0
+            var top: Int = 0
+            var end: Int = 0
+            var bottom: Int = 0
+
+            val startContainer: Int = -1
+            val topContainer: Int = -1
+            val endContainer: Int = -1
+            val bottomContainer: Int = -1
+
+            private var rule: DecorationRule = AnyRule()
+
+            fun with(ruleBuilder: DecorationRuleBuilder<T>.() -> Unit) {
+                rule = DecorationRuleBuilder<T>()
+                    .apply(ruleBuilder)
+                    .create()
+            }
+
+            fun create(): RuleWithParams<Param> {
+                val param = Param(
+                    start = start,
+                    top = top,
+                    end = end,
+                    bottom = bottom,
+
+                    startContainer = if (startContainer == -1) start else startContainer,
+                    topContainer = if (topContainer == -1) start else topContainer,
+                    endContainer = if (endContainer == -1) start else endContainer,
+                    bottomContainer = if (bottomContainer == -1) start else bottomContainer
+                )
+                return RuleWithParams(rule, param)
+            }
+        }
     }
 }

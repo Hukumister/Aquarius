@@ -77,7 +77,6 @@ data class NotRule(val rule: DecorationRule) : DecorationRule {
     override fun resolve(adapterPosition: Int, parent: RecyclerView): Boolean = !rule.resolve(adapterPosition, parent)
 
     override fun weight(): Int = 0
-
 }
 
 class LastRule : DecorationRule {
