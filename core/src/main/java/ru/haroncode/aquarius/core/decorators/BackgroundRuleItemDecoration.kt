@@ -9,6 +9,9 @@ import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.RecyclerView
 import ru.haroncode.aquarius.core.decorators.BackgroundRuleItemDecoration.Background
 
+/**
+ * Decoration which fill {@link RecyclerView} child's by color or selected drawable.
+ */
 class BackgroundRuleItemDecoration private constructor(
     rulesWithParams: List<RuleWithParams<Background>>
 ) : RuleItemDecoration<Background>(rulesWithParams) {

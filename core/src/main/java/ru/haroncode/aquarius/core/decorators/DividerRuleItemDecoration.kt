@@ -12,6 +12,10 @@ import ru.haroncode.aquarius.core.decorators.view.Padding
 import ru.haroncode.aquarius.core.util.resolveDrawableAttr
 import java.util.*
 
+/**
+ * Decoration which add dividers between {@link RecyclerView} child's by selected drawable or by attribute listDivider
+ * {@link android.R.attr.listDivider}.
+ */
 class DividerRuleItemDecoration private constructor(
     ruleWithParams: List<RuleWithParams<Param>>,
     context: Context
@@ -106,11 +110,17 @@ class DividerRuleItemDecoration private constructor(
             param = param.copy(drawable = drawable)
         }
 
-        fun gravity(gravity: Gravity, startPadding: Int = 0, endPadding: Int = 0) {
+        /**
+         * This function using to add divider for selected gravity {@link Gravity}, it means if you set gravity as
+         * Gravity.BOTTOM divider will be drawn in the bottom on Recycler's child.
+         *
+         * Also you can add some padding for divider.
+         */
+        fun gravity(gravity: Gravity, startPadding: Int = 0, endPadding: Int = 0, topPadding: Int = 0) {
             param = param.copy(
                 gravities = param.gravities.apply { add(gravity) },
                 paddingMap = param.paddingMap.apply {
-                    put(gravity, Padding(startPadding, endPadding))
+                    put(gravity, Padding(start = startPadding, end = endPadding, top = topPadding))
                 }
             )
         }

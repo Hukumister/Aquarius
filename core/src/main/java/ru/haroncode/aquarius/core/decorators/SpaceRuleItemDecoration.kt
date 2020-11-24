@@ -2,7 +2,8 @@ package ru.haroncode.aquarius.core.decorators
 
 import android.graphics.Rect
 import android.view.View
-import androidx.annotation.IntRange
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.haroncode.aquarius.core.decorators.view.Padding
 
@@ -11,9 +12,7 @@ import ru.haroncode.aquarius.core.decorators.view.Padding
  * space between child and {@link RecyclerView} container
  */
 class SpaceRuleItemDecoration private constructor(
-    rulesWithParams: List<RuleWithParams<Param>>,
-    @IntRange(from = 0) private val spanCount: Int = 1,
-    @RecyclerView.Orientation private val orientation: Int = RecyclerView.VERTICAL
+    rulesWithParams: List<RuleWithParams<Param>>
 ) : RuleItemDecoration<SpaceRuleItemDecoration.Param>(rulesWithParams) {
 
     override fun getItemOffsets(
@@ -24,6 +23,8 @@ class SpaceRuleItemDecoration private constructor(
         param: Param
     ) {
         super.getItemOffsets(outRect, view, parent, state, param)
+        val layoutManager = parent.layoutManager as? LinearLayoutManager ?: return
+        val orientation = layoutManager.orientation
         if (orientation == RecyclerView.VERTICAL) {
             outRect.left = if (isStartSpan(view, parent)) param.container.start else param.padding.start
             outRect.top = if (isFirstRow(view, parent)) param.container.top else param.padding.top
@@ -40,17 +41,20 @@ class SpaceRuleItemDecoration private constructor(
 
     private fun isStartSpan(view: View, parent: RecyclerView): Boolean {
         val position = getPosition(parent, view)
+        val spanCount = getSpanCount(parent)
         return position % spanCount == 0
     }
 
     private fun isFirstRow(view: View, parent: RecyclerView): Boolean {
         val position = getPosition(parent, view)
+        val spanCount = getSpanCount(parent)
         return (position + 1).toFloat() / spanCount.toFloat() <= 1.0f
     }
 
     private fun isLastRow(view: View, parent: RecyclerView): Boolean {
         val position = getPosition(parent, view)
         val itemCount = parent.adapter?.itemCount ?: 0
+        val spanCount = getSpanCount(parent)
         val remainder = itemCount % spanCount
         val lastRowItemCount = if (remainder == 0) spanCount else remainder
         return position >= itemCount - lastRowItemCount
@@ -58,7 +62,12 @@ class SpaceRuleItemDecoration private constructor(
 
     private fun isEndSpan(view: View, parent: RecyclerView): Boolean {
         val position = getPosition(parent, view)
+        val spanCount = getSpanCount(parent)
         return position % spanCount == spanCount - 1
+    }
+
+    private fun getSpanCount(parent: RecyclerView): Int {
+        return (parent.layoutManager as? GridLayoutManager)?.spanCount ?: 1
     }
 
     private fun getPosition(parent: RecyclerView, view: View): Int = parent.getChildAdapterPosition(view)
@@ -86,6 +95,12 @@ class SpaceRuleItemDecoration private constructor(
             padding = padding.copy(start = start, top = top, end = end, bottom = bottom)
         }
 
+        /**
+         * Sets padding for the first column, you should only use this if you use GridLayoutManager.
+         * Then these padding will only be used for the first and last element in the column.
+         *
+         * You can use the padding or paddingHorizontal / paddingVertical methods to set padding between elements
+         */
         fun container(start: Int = 0, top: Int = 0, end: Int, bottom: Int = 0) {
             container = container
                 ?.copy(start = start, top = top, end = end, bottom = bottom)
@@ -106,20 +121,7 @@ class SpaceRuleItemDecoration private constructor(
 
     class Builder<T : Any> {
 
-        private var spanCount: Int = 1
-        @RecyclerView.Orientation private val orientation: Int = RecyclerView.VERTICAL
-
         private val ruleWithParams = mutableListOf<RuleWithParams<Param>>()
-
-        fun withSpanCount(count: Int): Builder<T> {
-            spanCount = count
-            return this
-        }
-
-        fun withOrientation(count: Int): Builder<T> {
-            spanCount = count
-            return this
-        }
 
         fun addRule(
             block: ParamBuilder<T>.() -> Unit
@@ -131,6 +133,6 @@ class SpaceRuleItemDecoration private constructor(
             return this
         }
 
-        fun create() = SpaceRuleItemDecoration(ruleWithParams, spanCount, orientation)
+        fun create() = SpaceRuleItemDecoration(ruleWithParams)
     }
 }

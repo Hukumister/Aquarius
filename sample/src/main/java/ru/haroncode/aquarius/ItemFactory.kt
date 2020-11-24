@@ -12,7 +12,7 @@ object ItemFactory {
         resultList += Item.Button(context.getString(R.string.update))
         resultList += generateSimpleTextItems(context)
         resultList += generateCardItems(context)
-        resultList += Item.SimpleTextItem(context.getString(R.string.carousel))
+        resultList += Item.Title(R.string.carousel)
         resultList += carousel()
 
         resultList += Item.Button(context.getString(R.string.load_more), R.id.button_load_more)
