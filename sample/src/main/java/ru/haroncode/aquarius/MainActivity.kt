@@ -2,13 +2,14 @@ package ru.haroncode.aquarius
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategies
 import ru.haroncode.aquarius.core.clicker.DefaultClicker
+import ru.haroncode.aquarius.core.decorators.DividerDecoration
 import ru.haroncode.aquarius.core.decorators.SpaceDecoration
+import ru.haroncode.aquarius.core.decorators.view.Gravity
 import ru.haroncode.aquarius.renderers.ButtonRenderer
 import ru.haroncode.aquarius.renderers.CardRenderer
 import ru.haroncode.aquarius.renderers.CarouselRenderer
@@ -35,27 +36,27 @@ class MainActivity : AppCompatActivity() {
 
         val spaceDecoration = SpaceDecoration.Builder<Item>()
             .addRule {
-
-                paddingVertical(8.dp)
-                paddingHorizontal(8.dp)
+                paddingVertical(4.dp)
+                paddingHorizontal(16.dp)
             }
             .create()
+
+        val dividerDecoration = DividerDecoration.Builder<Item>(this)
+            .addRule {
+                gravity(Gravity.BOTTOM)
                 with {
-                    oneOf {
-                        first()
-                        last()
-                    }
+                    viewType(Item.SimpleTextItem::class)
                 }
             }
             .create()
 
-        DividerItemDecoration
         with(recyclerView) {
             adapter = itemAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
             setHasFixedSize(true)
 
             addItemDecoration(spaceDecoration)
+            addItemDecoration(dividerDecoration)
         }
 
         itemAdapter.differ.submitList(ItemFactory.staticItems(this))
