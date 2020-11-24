@@ -4,6 +4,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.annotation.IntRange
 import androidx.recyclerview.widget.RecyclerView
+import ru.haroncode.aquarius.core.decorators.view.Padding
 
 /**
  * Decoration which add space between {@link RecyclerView} child's. Separate for space between child's and
@@ -62,18 +63,45 @@ class SpaceDecoration private constructor(
 
     private fun getPosition(parent: RecyclerView, view: View): Int = parent.getChildAdapterPosition(view)
 
-
     data class Param(
         val padding: Padding,
         val container: Padding
-    ) {
+    )
 
-        data class Padding(
-            val start: Int = 0,
-            val top: Int = 0,
-            val end: Int = 0,
-            val bottom: Int = 0,
-        )
+    class ParamBuilder<T : Any> {
+
+        private var padding: Padding = Padding()
+        private var container: Padding? = null
+        private var rule: DecorationRule = AnyRule()
+
+        fun paddingHorizontal(value: Int) {
+            padding = padding.copy(start = value, end = value)
+        }
+
+        fun paddingVertical(value: Int) {
+            padding = padding.copy(top = value, bottom = value)
+        }
+
+        fun padding(start: Int = 0, top: Int = 0, end: Int, bottom: Int = 0) {
+            padding = padding.copy(start = start, top = top, end = end, bottom = bottom)
+        }
+
+        fun container(start: Int = 0, top: Int = 0, end: Int, bottom: Int = 0) {
+            container = container
+                ?.copy(start = start, top = top, end = end, bottom = bottom)
+                ?: Padding(start = start, top = top, end = end, bottom = bottom)
+        }
+
+        fun with(ruleBuilder: DecorationRuleBuilder<T>.() -> Unit) {
+            rule = DecorationRuleBuilder<T>()
+                .apply(ruleBuilder)
+                .create()
+        }
+
+        internal fun create(): RuleWithParams<Param> {
+            val param = Param(padding = padding, container = container ?: padding)
+            return RuleWithParams(rule, param)
+        }
     }
 
     class Builder<T : Any> {
@@ -104,41 +132,5 @@ class SpaceDecoration private constructor(
         }
 
         fun create() = SpaceDecoration(ruleWithParams, spanCount, orientation)
-
-        class ParamBuilder<T : Any> {
-
-            private var padding: Param.Padding = Param.Padding()
-            private var container: Param.Padding? = null
-            private var rule: DecorationRule = AnyRule()
-
-            fun paddingHorizontal(value: Int) {
-                padding = padding.copy(start = value, end = value)
-            }
-
-            fun paddingVertical(value: Int) {
-                padding = padding.copy(top = value, bottom = value)
-            }
-
-            fun padding(start: Int = 0, top: Int = 0, end: Int, bottom: Int = 0) {
-                padding = padding.copy(start = start, top = top, end = end, bottom = bottom)
-            }
-
-            fun container(start: Int = 0, top: Int = 0, end: Int, bottom: Int = 0) {
-                container = container
-                    ?.copy(start = start, top = top, end = end, bottom = bottom)
-                    ?: Param.Padding(start = start, top = top, end = end, bottom = bottom)
-            }
-
-            fun with(ruleBuilder: DecorationRuleBuilder<T>.() -> Unit) {
-                rule = DecorationRuleBuilder<T>()
-                    .apply(ruleBuilder)
-                    .create()
-            }
-
-            fun create(): RuleWithParams<Param> {
-                val param = Param(padding = padding, container = container ?: padding)
-                return RuleWithParams(rule, param)
-            }
-        }
     }
 }
