@@ -116,11 +116,11 @@ class DividerRuleItemDecoration private constructor(
          *
          * Also you can add some padding for divider.
          */
-        fun gravity(gravity: Gravity, startPadding: Int = 0, endPadding: Int = 0, topPadding: Int = 0) {
+        fun gravity(gravity: Gravity, startPadding: Int = 0, endPadding: Int = 0) {
             param = param.copy(
                 gravities = param.gravities.apply { add(gravity) },
                 paddingMap = param.paddingMap.apply {
-                    put(gravity, Padding(start = startPadding, end = endPadding, top = topPadding))
+                    put(gravity, Padding(start = startPadding, end = endPadding))
                 }
             )
         }
