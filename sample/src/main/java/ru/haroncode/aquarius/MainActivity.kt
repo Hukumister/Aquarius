@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.haroncode.aquarius.core.RenderAdapter
+import ru.haroncode.aquarius.core.RenderAdapterBuilder
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategies
 import ru.haroncode.aquarius.core.clicker.DefaultClicker
 import ru.haroncode.aquarius.core.decorators.DividerRuleItemDecoration
@@ -20,7 +21,7 @@ import ru.haroncode.aquarius.utils.dp
 class MainActivity : AppCompatActivity() {
 
     private val itemAdapter by lazy {
-        RenderAdapter.Builder<Item>()
+        RenderAdapterBuilder<Item>()
             .renderer(Item.Title::class, TitleRenderer())
             .renderer(Item.SimpleTextItem::class, SimpleTextRenderer())
             .renderer(Item.CarouselItem::class, CarouselRenderer())
