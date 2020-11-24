@@ -24,15 +24,15 @@ class SpaceDecoration private constructor(
     ) {
         super.getItemOffsets(outRect, view, parent, state, param)
         if (orientation == RecyclerView.VERTICAL) {
-            outRect.left = if (isStartSpan(view, parent)) param.startContainer else param.start
-            outRect.top = if (isFirstRow(view, parent)) param.topContainer else param.top
-            outRect.right = if (isEndSpan(view, parent)) param.endContainer else param.end
-            outRect.bottom = if (isLastRow(view, parent)) param.bottomContainer else param.bottom
+            outRect.left = if (isStartSpan(view, parent)) param.container.start else param.padding.start
+            outRect.top = if (isFirstRow(view, parent)) param.container.top else param.padding.top
+            outRect.right = if (isEndSpan(view, parent)) param.container.end else param.padding.end
+            outRect.bottom = if (isLastRow(view, parent)) param.container.bottom else param.padding.bottom
         } else {
-            outRect.left = if (isFirstRow(view, parent)) param.startContainer else param.start
-            outRect.right = if (isLastRow(view, parent)) param.endContainer else param.end
-            outRect.top = if (isStartSpan(view, parent)) param.topContainer else param.top
-            outRect.bottom = if (isEndSpan(view, parent)) param.bottomContainer else param.bottom
+            outRect.left = if (isFirstRow(view, parent)) param.container.start else param.padding.start
+            outRect.right = if (isLastRow(view, parent)) param.container.end else param.padding.end
+            outRect.top = if (isStartSpan(view, parent)) param.container.top else param.padding.top
+            outRect.bottom = if (isEndSpan(view, parent)) param.container.bottom else param.padding.bottom
         }
 
     }
@@ -62,17 +62,19 @@ class SpaceDecoration private constructor(
 
     private fun getPosition(parent: RecyclerView, view: View): Int = parent.getChildAdapterPosition(view)
 
-    data class Param(
-        val start: Int = 0,
-        val top: Int = 0,
-        val end: Int = 0,
-        val bottom: Int = 0,
 
-        val startContainer: Int = start,
-        val topContainer: Int = top,
-        val endContainer: Int = end,
-        val bottomContainer: Int = bottom
-    )
+    data class Param(
+        val padding: Padding,
+        val container: Padding
+    ) {
+
+        data class Padding(
+            val start: Int = 0,
+            val top: Int = 0,
+            val end: Int = 0,
+            val bottom: Int = 0,
+        )
+    }
 
     class Builder<T : Any> {
 
@@ -105,17 +107,27 @@ class SpaceDecoration private constructor(
 
         class ParamBuilder<T : Any> {
 
-            var start: Int = 0
-            var top: Int = 0
-            var end: Int = 0
-            var bottom: Int = 0
-
-            val startContainer: Int = -1
-            val topContainer: Int = -1
-            val endContainer: Int = -1
-            val bottomContainer: Int = -1
-
+            private var padding: Param.Padding = Param.Padding()
+            private var container: Param.Padding? = null
             private var rule: DecorationRule = AnyRule()
+
+            fun paddingHorizontal(value: Int) {
+                padding = padding.copy(start = value, end = value)
+            }
+
+            fun paddingVertical(value: Int) {
+                padding = padding.copy(top = value, bottom = value)
+            }
+
+            fun padding(start: Int = 0, top: Int = 0, end: Int, bottom: Int = 0) {
+                padding = padding.copy(start = start, top = top, end = end, bottom = bottom)
+            }
+
+            fun container(start: Int = 0, top: Int = 0, end: Int, bottom: Int = 0) {
+                container = container
+                    ?.copy(start = start, top = top, end = end, bottom = bottom)
+                    ?: Param.Padding(start = start, top = top, end = end, bottom = bottom)
+            }
 
             fun with(ruleBuilder: DecorationRuleBuilder<T>.() -> Unit) {
                 rule = DecorationRuleBuilder<T>()
@@ -124,17 +136,7 @@ class SpaceDecoration private constructor(
             }
 
             fun create(): RuleWithParams<Param> {
-                val param = Param(
-                    start = start,
-                    top = top,
-                    end = end,
-                    bottom = bottom,
-
-                    startContainer = if (startContainer == -1) start else startContainer,
-                    topContainer = if (topContainer == -1) start else topContainer,
-                    endContainer = if (endContainer == -1) start else endContainer,
-                    bottomContainer = if (bottomContainer == -1) start else bottomContainer
-                )
+                val param = Param(padding = padding, container = container ?: padding)
                 return RuleWithParams(rule, param)
             }
         }

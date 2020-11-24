@@ -35,9 +35,11 @@ class MainActivity : AppCompatActivity() {
 
         val spaceDecoration = SpaceDecoration.Builder<Item>()
             .addRule {
-                start = 16.dp
-                end = 16.dp
 
+                paddingVertical(8.dp)
+                paddingHorizontal(8.dp)
+            }
+            .create()
                 with {
                     oneOf {
                         first()
