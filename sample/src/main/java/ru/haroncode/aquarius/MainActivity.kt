@@ -7,8 +7,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategies
 import ru.haroncode.aquarius.core.clicker.DefaultClicker
-import ru.haroncode.aquarius.core.decorators.DividerDecoration
-import ru.haroncode.aquarius.core.decorators.SpaceDecoration
+import ru.haroncode.aquarius.core.decorators.DividerRuleItemDecoration
+import ru.haroncode.aquarius.core.decorators.SpaceRuleItemDecoration
 import ru.haroncode.aquarius.core.decorators.view.Gravity
 import ru.haroncode.aquarius.renderers.ButtonRenderer
 import ru.haroncode.aquarius.renderers.CardRenderer
@@ -34,14 +34,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val spaceDecoration = SpaceDecoration.Builder<Item>()
+        val spaceDecoration = SpaceRuleItemDecoration.Builder<Item>()
             .addRule {
                 paddingVertical(4.dp)
                 paddingHorizontal(16.dp)
             }
             .create()
 
-        val dividerDecoration = DividerDecoration.Builder<Item>(this)
+        val dividerDecoration = DividerRuleItemDecoration.Builder<Item>(this)
             .addRule {
                 gravity(Gravity.BOTTOM)
                 with {

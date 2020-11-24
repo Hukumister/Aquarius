@@ -6,15 +6,16 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import ru.haroncode.aquarius.core.decorators.DividerRuleItemDecoration.Param
 import ru.haroncode.aquarius.core.decorators.view.Gravity
 import ru.haroncode.aquarius.core.decorators.view.Padding
 import ru.haroncode.aquarius.core.util.resolveDrawableAttr
 import java.util.*
 
-class DividerDecoration private constructor(
+class DividerRuleItemDecoration private constructor(
     ruleWithParams: List<RuleWithParams<Param>>,
     context: Context
-) : RuleItemDecoration<DividerDecoration.Param>(ruleWithParams) {
+) : RuleItemDecoration<Param>(ruleWithParams) {
 
     private val listDivider = context.resolveDrawableAttr(android.R.attr.listDivider)
 
@@ -137,6 +138,6 @@ class DividerDecoration private constructor(
             return this
         }
 
-        fun create() = DividerDecoration(ruleWithParams, context)
+        fun create() = DividerRuleItemDecoration(ruleWithParams, context)
     }
 }

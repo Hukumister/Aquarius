@@ -7,9 +7,9 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import androidx.annotation.ColorInt
 import androidx.recyclerview.widget.RecyclerView
-import ru.haroncode.aquarius.core.decorators.BackgroundDecoration.Background
+import ru.haroncode.aquarius.core.decorators.BackgroundRuleItemDecoration.Background
 
-class BackgroundDecoration private constructor(
+class BackgroundRuleItemDecoration private constructor(
     rulesWithParams: List<RuleWithParams<Background>>
 ) : RuleItemDecoration<Background>(rulesWithParams) {
 
@@ -101,6 +101,6 @@ class BackgroundDecoration private constructor(
             return this
         }
 
-        fun create() = BackgroundDecoration(ruleWithParams)
+        fun create() = BackgroundRuleItemDecoration(ruleWithParams)
     }
 }

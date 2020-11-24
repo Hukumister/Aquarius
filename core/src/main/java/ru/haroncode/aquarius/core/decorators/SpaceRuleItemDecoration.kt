@@ -10,11 +10,11 @@ import ru.haroncode.aquarius.core.decorators.view.Padding
  * Decoration which add space between {@link RecyclerView} child's. Separate for space between child's and
  * space between child and {@link RecyclerView} container
  */
-class SpaceDecoration private constructor(
+class SpaceRuleItemDecoration private constructor(
     rulesWithParams: List<RuleWithParams<Param>>,
     @IntRange(from = 0) private val spanCount: Int = 1,
     @RecyclerView.Orientation private val orientation: Int = RecyclerView.VERTICAL
-) : RuleItemDecoration<SpaceDecoration.Param>(rulesWithParams) {
+) : RuleItemDecoration<SpaceRuleItemDecoration.Param>(rulesWithParams) {
 
     override fun getItemOffsets(
         outRect: Rect,
@@ -131,6 +131,6 @@ class SpaceDecoration private constructor(
             return this
         }
 
-        fun create() = SpaceDecoration(ruleWithParams, spanCount, orientation)
+        fun create() = SpaceRuleItemDecoration(ruleWithParams, spanCount, orientation)
     }
 }
