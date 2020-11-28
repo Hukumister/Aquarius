@@ -3,8 +3,7 @@ package ru.haroncode.aquarius.core.util
 import androidx.collection.SparseArrayCompat
 import java.util.*
 
-fun <E> List<E>.moveSwap(fromPosition: Int, toPosition: Int): List<E> {
-    val mutableList = toMutableList()
+fun <E> MutableList<E>.moveSwap(fromPosition: Int, toPosition: Int) {
     val range = if (fromPosition < toPosition) {
         fromPosition until toPosition
     } else {
@@ -12,9 +11,8 @@ fun <E> List<E>.moveSwap(fromPosition: Int, toPosition: Int): List<E> {
     }
 
     for (index in range) {
-        Collections.swap(mutableList, index, index + 1)
+        Collections.swap(this, index, index + 1)
     }
-    return mutableList
 }
 
 fun <E> SparseArrayCompat<E>.forEach(consumer: (E) -> Unit) {

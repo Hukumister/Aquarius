@@ -58,8 +58,5 @@ class AsyncRenderAdapter<T : Any>(
             val newList = currentList.toMutableList().apply { removeAt(position) }
             asyncDiffer.submitList(newList)
         }
-
-        //Drag and drop unsupported in async differ
-        override fun swap(fromPosition: Int, toPosition: Int) = Unit
     }
 }

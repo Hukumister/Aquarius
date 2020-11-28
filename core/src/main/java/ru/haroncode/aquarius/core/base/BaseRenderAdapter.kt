@@ -12,7 +12,6 @@ import ru.haroncode.aquarius.core.observer.AdapterDataSourceObserver
 import ru.haroncode.aquarius.core.observer.DataSourceObserver
 import ru.haroncode.aquarius.core.renderer.BaseRenderer
 import ru.haroncode.aquarius.core.util.moveSwap
-import java.util.*
 import kotlin.reflect.KClass
 
 class BaseRenderAdapter<T : Any>(
@@ -39,28 +38,32 @@ class BaseRenderAdapter<T : Any>(
     private class BaseDiffer<T>(
         private val differStrategy: DifferStrategy<T>,
         private val dataSourceObserver: DataSourceObserver
-    ) : Differ<T> {
+    ) : SwapableDiffer<T> {
 
-        private var actualItems = emptyList<T>()
+        private var actualItems = arrayListOf<T>()
 
         override val currentList: List<T>
             get() = actualItems
 
         override fun submitList(items: List<T>) {
             val calculateDiff = differStrategy.calculateDiff(actualItems, items)
-            actualItems = items
+            if (actualItems.isEmpty()) {
+                actualItems.addAll(items)
+            } else {
+                actualItems = ArrayList(items)
+            }
             calculateDiff.dispatchUpdatesTo(dataSourceObserver)
         }
 
         override fun removeAtPosition(position: Int) {
             val calculateDiff = differStrategy.removeAtPosition(position)
-            actualItems = actualItems.toMutableList().apply { removeAt(position) }
+            actualItems.removeAt(position)
             calculateDiff.dispatchUpdatesTo(dataSourceObserver)
         }
 
         override fun swap(fromPosition: Int, toPosition: Int) {
             val calculateDiff = differStrategy.swap(fromPosition, toPosition)
-            actualItems = actualItems.moveSwap(fromPosition, toPosition)
+            actualItems.moveSwap(fromPosition, toPosition)
             calculateDiff.dispatchUpdatesTo(dataSourceObserver)
         }
     }

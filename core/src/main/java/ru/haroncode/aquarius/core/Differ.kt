@@ -7,6 +7,4 @@ interface Differ<T> {
     fun submitList(items: List<T>)
 
     fun removeAtPosition(position: Int)
-
-    fun swap(fromPosition: Int, toPosition: Int)
 }
