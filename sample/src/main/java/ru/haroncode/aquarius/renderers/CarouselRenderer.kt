@@ -2,10 +2,9 @@ package ru.haroncode.aquarius.renderers
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_carousel.view.*
 import ru.haroncode.aquarius.R
-import ru.haroncode.aquarius.core.RenderAdapter
+import ru.haroncode.aquarius.core.RenderAdapterBuilder
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategies
 import ru.haroncode.aquarius.core.diffutil.ComparableItem
 import ru.haroncode.aquarius.core.renderer.ItemBaseRenderer
@@ -22,7 +21,7 @@ class CarouselRenderer<Item> : ItemBaseRenderer<Item, RenderContract>() {
     ) : ImageRenderer.RenderContract, ComparableItem
 
     private val itemAdapter by lazy {
-        RenderAdapter.Builder<ImageItem>()
+        RenderAdapterBuilder<ImageItem>()
             .renderer(ImageItem::class, ImageRenderer())
             .build(DifferStrategies.withDiffUtilComparable())
     }
@@ -33,7 +32,6 @@ class CarouselRenderer<Item> : ItemBaseRenderer<Item, RenderContract>() {
         val viewHolder = super.onCreateViewHolder(inflater, parent)
         val recyclerView = viewHolder.itemView.recyclerView
         if (recyclerView.adapter == null) {
-            recyclerView.layoutManager = LinearLayoutManager(viewHolder.itemView.context, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.adapter = itemAdapter
         }
         return viewHolder
