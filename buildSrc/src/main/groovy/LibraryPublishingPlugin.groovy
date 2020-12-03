@@ -1,13 +1,11 @@
-import task.AndroidJavadocsJarTask
-import task.AndroidJavadocsTask
-import task.AndroidSourcesJarTack
 import data.AuthData
 import data.PublishData
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
-import task.JavadocsJarTask
-import task.SourceJarTask
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
+import task.*
 
 class LibraryPublishingPlugin implements Plugin<Project> {
 
@@ -16,7 +14,7 @@ class LibraryPublishingPlugin implements Plugin<Project> {
         def extension = project.extensions.create('LibraryPublishing', LibraryPublishingPluginExtension)
 
         project.plugins.apply("com.jfrog.bintray")
-        project.plugins.apply("com.github.dcendents.android-maven")
+        project.plugins.apply(MavenPublishPlugin)
 
         configure(project)
 
@@ -27,17 +25,6 @@ class LibraryPublishingPlugin implements Plugin<Project> {
 
             project.version = extension.version
             project.group = publishData.groupId
-
-            project.install {
-                repositories.mavenInstaller {
-
-                    // This generates POM.xml with proper parameters
-                    pom.project {
-                        groupId publishData.groupId
-                        artifactId extension.artifactId
-                    }
-                }
-            }
 
             project.bintray {
 
