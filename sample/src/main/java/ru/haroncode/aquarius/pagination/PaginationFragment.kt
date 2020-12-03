@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_pagination.*
-import ru.haroncode.aquarius.Item
+import ru.haroncode.aquarius.list.Item
 import ru.haroncode.aquarius.R
 import ru.haroncode.aquarius.core.RenderAdapterBuilder
 import ru.haroncode.aquarius.core.decorators.SpaceRuleItemDecoration
@@ -32,9 +32,7 @@ class PaginationFragment : Fragment(R.layout.fragment_pagination) {
                 paddingHorizontal(16.dp)
             }
             .create()
-
-
-
+        
         var pageCount = 0
         with(recyclerView) {
             setHasFixedSize(true)

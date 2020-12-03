@@ -1,4 +1,4 @@
-package ru.haroncode.aquarius
+package ru.haroncode.aquarius.list
 
 import ru.haroncode.aquarius.core.diffutil.ComparableItem
 import ru.haroncode.aquarius.renderers.ButtonRenderer

@@ -1,6 +1,7 @@
-package ru.haroncode.aquarius
+package ru.haroncode.aquarius.list
 
 import android.content.Context
+import ru.haroncode.aquarius.R
 import ru.haroncode.aquarius.renderers.CarouselRenderer.ImageItem
 import java.util.*
 

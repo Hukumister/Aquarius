@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_list.*
-import ru.haroncode.aquarius.Item
-import ru.haroncode.aquarius.ItemFactory
 import ru.haroncode.aquarius.R
 import ru.haroncode.aquarius.core.RenderAdapterBuilder
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategies
@@ -29,7 +27,6 @@ class ListFragment : Fragment(R.layout.fragment_list) {
             .renderer(Item.CarouselItem::class, CarouselRenderer())
             .renderer(Item.Button::class, ButtonRenderer(), DefaultClicker(::onClickButton))
             .renderer(Item.CardItem::class, CardRenderer())
-//            .buildAsync(ComparableDiffUtilItemCallback())
             .build(DifferStrategies.withDiffUtilComparable())
     }
 
