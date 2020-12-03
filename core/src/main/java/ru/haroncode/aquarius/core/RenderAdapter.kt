@@ -4,19 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.collection.SparseArrayCompat
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import ru.haroncode.aquarius.core.async.AsyncRenderAdapter
-import ru.haroncode.aquarius.core.base.BaseRenderAdapter
-import ru.haroncode.aquarius.core.base.strategies.DifferStrategies
-import ru.haroncode.aquarius.core.base.strategies.DifferStrategy
 import ru.haroncode.aquarius.core.clicker.ClickableRenderer
 import ru.haroncode.aquarius.core.clicker.Clicker
-import ru.haroncode.aquarius.core.clicker.Clickers
 import ru.haroncode.aquarius.core.helper.RenderItemTouchHelperCallback
 import ru.haroncode.aquarius.core.renderer.BaseRenderer
-import kotlin.reflect.KClass
 
 abstract class RenderAdapter<T : Any>(
     private val itemIdSelector: (T) -> Long,
@@ -28,6 +21,8 @@ abstract class RenderAdapter<T : Any>(
 
     abstract val differ: Differ<T>
 
+    abstract val notifier: Notifier<T>
+
     private val itemTouchHelper = ItemTouchHelper(touchHelperCallback)
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -36,9 +31,9 @@ abstract class RenderAdapter<T : Any>(
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
-    open fun onItemMove(fromPosition: Int, toPosition: Int) = differ.swap(fromPosition, toPosition)
+    open fun onItemMove(fromPosition: Int, toPosition: Int) = Unit
 
-    open fun onItemDismiss(position: Int, direction: Int) = differ.removeAtPosition(position)
+    open fun onItemDismiss(position: Int, direction: Int) = Unit
 
     override fun getItemId(position: Int): Long {
         val itemModel = differ.currentList[position]

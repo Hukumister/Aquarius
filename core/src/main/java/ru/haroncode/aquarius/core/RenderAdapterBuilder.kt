@@ -65,7 +65,7 @@ class RenderAdapterBuilder<T : Any> {
 
     fun build(
         differStrategy: DifferStrategy<T> = DifferStrategies.none()
-    ): RenderAdapter<T> = BaseRenderAdapter(
+    ) = BaseRenderAdapter(
         differStrategy = differStrategy,
         clickers = clickers,
         itemIdSelector = idSelector,
@@ -76,7 +76,7 @@ class RenderAdapterBuilder<T : Any> {
 
     fun buildAsync(
         itemCallback: DiffUtil.ItemCallback<T>
-    ): RenderAdapter<T> = AsyncRenderAdapter(
+    ) = AsyncRenderAdapter(
         itemCallback = itemCallback,
         clickers = clickers,
         itemIdSelector = idSelector,

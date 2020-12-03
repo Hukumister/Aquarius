@@ -5,7 +5,9 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import ru.haroncode.aquarius.core.BaseNotifier
 import ru.haroncode.aquarius.core.Differ
+import ru.haroncode.aquarius.core.Notifier
 import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.ViewTypeSelector
 import ru.haroncode.aquarius.core.clicker.Clicker
@@ -35,7 +37,16 @@ class AsyncRenderAdapter<T : Any>(
     touchHelperCallback = touchHelperCallback
 ) {
 
-    override val differ: Differ<T> = AsyncDiffer(itemCallback, AdapterDataSourceObserver(this))
+    private val adapterObserver: DataSourceObserver = AdapterDataSourceObserver(this)
+
+    override val differ: Differ<T> = AsyncDiffer(itemCallback, adapterObserver)
+
+    override val notifier: Notifier<T> = BaseNotifier(differ, adapterObserver)
+
+    override fun onItemDismiss(position: Int, direction: Int) {
+        val newList = differ.currentList.toMutableList().apply { removeAt(position) }
+        differ.submitList(newList)
+    }
 
     private class AsyncDiffer<T : Any>(
         itemCallback: DiffUtil.ItemCallback<T>,
@@ -53,13 +64,5 @@ class AsyncRenderAdapter<T : Any>(
         override fun submitList(items: List<T>) {
             asyncDiffer.submitList(items)
         }
-
-        override fun removeAtPosition(position: Int) {
-            val newList = currentList.toMutableList().apply { removeAt(position) }
-            asyncDiffer.submitList(newList)
-        }
-
-        //Drag and drop unsupported in async differ
-        override fun swap(fromPosition: Int, toPosition: Int) = Unit
     }
 }
