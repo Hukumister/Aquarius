@@ -32,7 +32,7 @@ class PaginationFragment : Fragment(R.layout.fragment_pagination) {
                 paddingHorizontal(16.dp)
             }
             .create()
-        
+
         var pageCount = 0
         with(recyclerView) {
             setHasFixedSize(true)
