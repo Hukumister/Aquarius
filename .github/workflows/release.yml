@@ -1,0 +1,44 @@
+name: Release
+
+# Triggers the workflow when publish release in github
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Release upload
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Set up cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ubuntu-latest-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ubuntu-latest-gradle-
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Upload to Bintray
+        run: ./gradlew --no-daemon publishToMavenLocal bintrayUpload -PBINTRAY_USER=${{ secrets.BINTRAY_USER }} -PBINTRAY_KEY=${{ secrets.BINTRAY_KEY }}
+
+      - name: Bundle the build report
+        if: failure()
+        run: find . -type d -name 'reports' | zip -@ -r build-reports.zip
+
+      - name: Upload the build report
+        if: failure()
+        uses: actions/upload-artifact@master
+        with:
+          name: error-report
+          path: build-reports
