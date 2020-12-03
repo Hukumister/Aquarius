@@ -13,12 +13,11 @@ class AuthData {
         String key
 
         if (fileProp.isEmpty()) {
-            user = System.getenv('BINTRAY_USER')
-            key = System.getenv('BINTRAY_KEY')
-
+            user = project.findProject('BINTRAY_USER')
+            key = project.findProject('BINTRAY_KEY')
         } else {
-            user = fileProp.findProperty('BINTRAY_USER')
-            key = fileProp.findProperty('BINTRAY_KEY')
+            user = fileProp.getProperty('BINTRAY_USER')
+            key = fileProp.getProperty('BINTRAY_KEY')
         }
         return new AuthData(user, key)
     }
