@@ -10,7 +10,6 @@ data class AndRule(val rules: List<DecorationRule>) : DecorationRule {
         rules.all { rule -> rule.resolve(adapterPosition, parent) }
 
     override fun weight(): Int = rules.sumBy(DecorationRule::weight)
-
 }
 
 data class OrRule(val rules: List<DecorationRule>) : DecorationRule {
@@ -19,7 +18,6 @@ data class OrRule(val rules: List<DecorationRule>) : DecorationRule {
         rules.any { rule -> rule.resolve(adapterPosition, parent) }
 
     override fun weight(): Int = rules.sumBy(DecorationRule::weight)
-
 }
 
 data class PositionRule(val positions: Set<Int>) : DecorationRule {
@@ -47,7 +45,6 @@ data class ViewTypeRule(val viewTypes: Set<Int>) : DecorationRule {
         adapterPosition != RecyclerView.NO_POSITION && parent.adapter?.getItemViewType(adapterPosition) in viewTypes
 
     override fun weight(): Int = 1
-
 }
 
 data class NextRule(val rule: DecorationRule) : DecorationRule {
@@ -58,7 +55,6 @@ data class NextRule(val rule: DecorationRule) : DecorationRule {
     }
 
     override fun weight(): Int = 1
-
 }
 
 data class PrevRule(val rule: DecorationRule) : DecorationRule {
@@ -69,7 +65,6 @@ data class PrevRule(val rule: DecorationRule) : DecorationRule {
     }
 
     override fun weight(): Int = 1
-
 }
 
 data class NotRule(val rule: DecorationRule) : DecorationRule {

@@ -32,7 +32,6 @@ class BackgroundRuleItemDecoration private constructor(
         } else {
             param.draw(canvas, child.left, child.top, child.right, child.bottom)
         }
-
     }
 
     sealed class Background {

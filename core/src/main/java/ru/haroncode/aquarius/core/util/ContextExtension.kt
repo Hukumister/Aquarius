@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import androidx.annotation.AttrRes
-import androidx.annotation.IntRange
-import androidx.annotation.Px
 import androidx.appcompat.content.res.AppCompatResources
 
 fun Context.resolveDrawableAttr(@AttrRes attr: Int): Drawable? {

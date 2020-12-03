@@ -36,7 +36,6 @@ class SpaceRuleItemDecoration private constructor(
             outRect.top = if (isStartSpan(view, parent)) param.container.top else param.padding.top
             outRect.bottom = if (isEndSpan(view, parent)) param.container.bottom else param.padding.bottom
         }
-
     }
 
     private fun isStartSpan(view: View, parent: RecyclerView): Boolean {
