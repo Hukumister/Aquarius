@@ -2,7 +2,9 @@ package ru.haroncode.aquarius.core.base
 
 import androidx.collection.SparseArrayCompat
 import androidx.recyclerview.widget.RecyclerView
+import ru.haroncode.aquarius.core.BaseNotifier
 import ru.haroncode.aquarius.core.MutableDiffer
+import ru.haroncode.aquarius.core.Notifier
 import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.ViewTypeSelector
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategy
@@ -33,7 +35,11 @@ class BaseRenderAdapter<T : Any>(
     touchHelperCallback = touchHelperCallback
 ) {
 
+    private val adapterObserver: DataSourceObserver = AdapterDataSourceObserver(this)
+
     override val differ: MutableDiffer<T> = BaseDiffer(differStrategy, adapterObserver)
+
+    override val notifier: Notifier<T> = BaseNotifier(differ, adapterObserver)
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {
         if (differ is BaseDiffer) {

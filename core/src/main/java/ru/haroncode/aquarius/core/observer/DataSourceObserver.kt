@@ -9,7 +9,7 @@ interface DataSourceObserver {
     fun onItemRangeChanged(
         @IntRange(from = 0) positionStart: Int,
         @IntRange(from = 0) itemCount: Int,
-        payload: Any?
+        payload: Any? = null
     )
 
     fun onItemRangeInserted(
