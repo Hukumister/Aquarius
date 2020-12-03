@@ -2,7 +2,7 @@ package ru.haroncode.aquarius.core.base
 
 import androidx.collection.SparseArrayCompat
 import androidx.recyclerview.widget.RecyclerView
-import ru.haroncode.aquarius.core.Differ
+import ru.haroncode.aquarius.core.MutableDiffer
 import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.ViewTypeSelector
 import ru.haroncode.aquarius.core.base.strategies.DifferStrategy
@@ -33,12 +33,20 @@ class BaseRenderAdapter<T : Any>(
     touchHelperCallback = touchHelperCallback
 ) {
 
-    override val differ: Differ<T> = BaseDiffer(differStrategy, AdapterDataSourceObserver(this))
+    override val differ: MutableDiffer<T> = BaseDiffer(differStrategy, adapterObserver)
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        if (differ is BaseDiffer) {
+            differ.move(fromPosition, toPosition)
+        }
+    }
+
+    override fun onItemDismiss(position: Int, direction: Int) = differ.removeAt(position)
 
     private class BaseDiffer<T>(
         private val differStrategy: DifferStrategy<T>,
         private val dataSourceObserver: DataSourceObserver
-    ) : SwapableDiffer<T> {
+    ) : MutableDiffer<T> {
 
         private var actualItems = arrayListOf<T>()
 
@@ -55,15 +63,45 @@ class BaseRenderAdapter<T : Any>(
             calculateDiff.dispatchUpdatesTo(dataSourceObserver)
         }
 
-        override fun removeAtPosition(position: Int) {
+        override fun removeAt(position: Int) {
             val calculateDiff = differStrategy.removeAtPosition(position)
             actualItems.removeAt(position)
             calculateDiff.dispatchUpdatesTo(dataSourceObserver)
         }
 
-        override fun swap(fromPosition: Int, toPosition: Int) {
-            val calculateDiff = differStrategy.swap(fromPosition, toPosition)
+        fun move(fromPosition: Int, toPosition: Int) {
+            val calculateDiff = differStrategy.move(fromPosition, toPosition)
             actualItems.moveSwap(fromPosition, toPosition)
+            calculateDiff.dispatchUpdatesTo(dataSourceObserver)
+        }
+
+        override fun addAt(position: Int, item: T) {
+            val calculateDiff = differStrategy.addAtPosition(position)
+            actualItems.add(position, item)
+            calculateDiff.dispatchUpdatesTo(dataSourceObserver)
+        }
+
+        override fun addAllAt(position: Int, items: List<T>) {
+            val calculateDiff = differStrategy.addAtPosition(position, items.size)
+            actualItems.addAll(position, items)
+            calculateDiff.dispatchUpdatesTo(dataSourceObserver)
+        }
+
+        override fun add(item: T) {
+            val calculateDiff = differStrategy.addAtPosition(actualItems.size)
+            actualItems.add(item)
+            calculateDiff.dispatchUpdatesTo(dataSourceObserver)
+        }
+
+        override fun addAll(items: List<T>) {
+            val calculateDiff = differStrategy.addAtPosition(currentList.lastIndex, items.size)
+            actualItems.addAll(items)
+            calculateDiff.dispatchUpdatesTo(dataSourceObserver)
+        }
+
+        override fun replace(position: Int, item: T) {
+            val calculateDiff = differStrategy.change(position)
+            actualItems[position] = item
             calculateDiff.dispatchUpdatesTo(dataSourceObserver)
         }
     }

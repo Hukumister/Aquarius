@@ -36,6 +36,10 @@ class AsyncRenderAdapter<T : Any>(
 ) {
 
     override val differ: Differ<T> = AsyncDiffer(itemCallback, AdapterDataSourceObserver(this))
+    override fun onItemDismiss(position: Int, direction: Int) {
+        val newList = differ.currentList.toMutableList().apply { removeAt(position) }
+        differ.submitList(newList)
+    }
 
     private class AsyncDiffer<T : Any>(
         itemCallback: DiffUtil.ItemCallback<T>,
@@ -52,11 +56,6 @@ class AsyncRenderAdapter<T : Any>(
 
         override fun submitList(items: List<T>) {
             asyncDiffer.submitList(items)
-        }
-
-        override fun removeAtPosition(position: Int) {
-            val newList = currentList.toMutableList().apply { removeAt(position) }
-            asyncDiffer.submitList(newList)
         }
     }
 }

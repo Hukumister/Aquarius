@@ -5,6 +5,4 @@ interface Differ<T> {
     val currentList: List<T>
 
     fun submitList(items: List<T>)
-
-    fun removeAtPosition(position: Int)
 }
