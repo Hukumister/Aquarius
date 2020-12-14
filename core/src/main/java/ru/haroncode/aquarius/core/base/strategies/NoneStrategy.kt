@@ -1,6 +1,6 @@
 package ru.haroncode.aquarius.core.base.strategies
 
-import ru.haroncode.aquarius.core.observer.DataSourceObserver
+import ru.haroncode.aquarius.core.observer.DataListUpdateCallback
 
 internal class NoneStrategy<T : Any> : DifferStrategy<T>() {
 
@@ -15,11 +15,11 @@ internal class NoneStrategy<T : Any> : DifferStrategy<T>() {
     ) : Result {
 
         override fun dispatchUpdatesTo(
-            dataSourceObserver: DataSourceObserver
+            dataListUpdateCallback: DataListUpdateCallback
         ) = when {
-            previousCount == 0 && actualCount > 0 -> dataSourceObserver.onItemRangeInserted(0, actualCount)
-            previousCount > 0 && actualCount == 0 -> dataSourceObserver.onItemRangeRemoved(0, previousCount)
-            else -> dataSourceObserver.onChanged()
+            previousCount == 0 && actualCount > 0 -> dataListUpdateCallback.onInserted(0, actualCount)
+            previousCount > 0 && actualCount == 0 -> dataListUpdateCallback.onRemoved(0, previousCount)
+            else -> dataListUpdateCallback.onChanged()
         }
     }
 }

@@ -4,7 +4,7 @@ import ru.haroncode.aquarius.core.base.strategies.results.AddRangeResult
 import ru.haroncode.aquarius.core.base.strategies.results.ChangeRangeResult
 import ru.haroncode.aquarius.core.base.strategies.results.MoveRangeResult
 import ru.haroncode.aquarius.core.base.strategies.results.RemoveRangeResult
-import ru.haroncode.aquarius.core.observer.DataSourceObserver
+import ru.haroncode.aquarius.core.observer.DataListUpdateCallback
 
 abstract class DifferStrategy<T> {
 
@@ -28,6 +28,6 @@ abstract class DifferStrategy<T> {
 
     interface Result {
 
-        fun dispatchUpdatesTo(dataSourceObserver: DataSourceObserver)
+        fun dispatchUpdatesTo(dataListUpdateCallback: DataListUpdateCallback)
     }
 }

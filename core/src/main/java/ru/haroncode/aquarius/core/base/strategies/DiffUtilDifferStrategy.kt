@@ -3,8 +3,7 @@ package ru.haroncode.aquarius.core.base.strategies
 import androidx.recyclerview.widget.BatchingListUpdateCallback
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DiffUtil.DiffResult
-import ru.haroncode.aquarius.core.observer.DataSourceObserver
-import ru.haroncode.aquarius.core.observer.DataSourceUpdateCallback
+import ru.haroncode.aquarius.core.observer.DataListUpdateCallback
 
 class DiffUtilDifferStrategy<T : Any>(
     private val itemCallback: DiffUtil.ItemCallback<T>,
@@ -51,9 +50,8 @@ class DiffUtilDifferStrategy<T : Any>(
         private val diffResult: DiffResult
     ) : Result {
 
-        override fun dispatchUpdatesTo(dataSourceObserver: DataSourceObserver) {
-            val adapterListUpdateCallback = DataSourceUpdateCallback(dataSourceObserver)
-            val batchUpdateCallback = BatchingListUpdateCallback(adapterListUpdateCallback)
+        override fun dispatchUpdatesTo(dataListUpdateCallback: DataListUpdateCallback) {
+            val batchUpdateCallback = BatchingListUpdateCallback(dataListUpdateCallback)
             diffResult.dispatchUpdatesTo(batchUpdateCallback)
         }
     }
@@ -63,8 +61,8 @@ class DiffUtilDifferStrategy<T : Any>(
         private val count: Int
     ) : Result {
 
-        override fun dispatchUpdatesTo(dataSourceObserver: DataSourceObserver) {
-            dataSourceObserver.onItemRangeInserted(position, count)
+        override fun dispatchUpdatesTo(dataListUpdateCallback: DataListUpdateCallback) {
+            dataListUpdateCallback.onInserted(position, count)
         }
     }
 }

@@ -12,9 +12,8 @@ import ru.haroncode.aquarius.core.RenderAdapter
 import ru.haroncode.aquarius.core.ViewTypeSelector
 import ru.haroncode.aquarius.core.clicker.Clicker
 import ru.haroncode.aquarius.core.helper.RenderItemTouchHelperCallback
-import ru.haroncode.aquarius.core.observer.AdapterDataSourceObserver
-import ru.haroncode.aquarius.core.observer.DataSourceObserver
-import ru.haroncode.aquarius.core.observer.DataSourceUpdateCallback
+import ru.haroncode.aquarius.core.observer.AdapterDataListUpdateCallback
+import ru.haroncode.aquarius.core.observer.DataListUpdateCallback
 import ru.haroncode.aquarius.core.renderer.BaseRenderer
 import kotlin.reflect.KClass
 
@@ -37,7 +36,7 @@ class AsyncRenderAdapter<T : Any>(
     touchHelperCallback = touchHelperCallback
 ) {
 
-    private val adapterObserver: DataSourceObserver = AdapterDataSourceObserver(this)
+    private val adapterObserver: DataListUpdateCallback = AdapterDataListUpdateCallback(this)
 
     override val differ: Differ<T> = AsyncDiffer(itemCallback, adapterObserver)
 
@@ -50,11 +49,11 @@ class AsyncRenderAdapter<T : Any>(
 
     private class AsyncDiffer<T : Any>(
         itemCallback: DiffUtil.ItemCallback<T>,
-        dataSourceObserver: DataSourceObserver
+        dataListUpdateCallback: DataListUpdateCallback
     ) : Differ<T> {
 
         private val asyncDiffer = AsyncListDiffer(
-            DataSourceUpdateCallback(dataSourceObserver),
+            dataListUpdateCallback,
             AsyncDifferConfig.Builder(itemCallback).build()
         )
 
