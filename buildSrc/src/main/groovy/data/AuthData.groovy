@@ -21,9 +21,6 @@ class AuthData {
             user = fileProp.getProperty('BINTRAY_USER')
             key = fileProp.getProperty('BINTRAY_KEY')
         }
-        if (user.isEmpty() || key.isEmpty()) {
-            Logging.getLogger(AuthData).warn("user or key is empty")
-        }
         return new AuthData(user, key)
     }
 
