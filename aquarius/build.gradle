@@ -18,6 +18,10 @@ android {
         }
     }
 
+    libraryVariants.all {
+        generateBuildConfigProvider.configure { enabled = false }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -28,22 +32,8 @@ android {
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            // Creates a Maven publication called "release".
-            release(MavenPublication) {
-                // Applies the component for the release build variant.
-                from components.release
-            }
-        }
-    }
-}
-
-LibraryPublishing {
-    artifactId 'aquarius'
-    version rootProject.ext.libraryVersion
-}
+version = findProperty("version")
+group = findProperty("group")
 
 configurations {
     ktlint

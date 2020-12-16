@@ -1,57 +1,68 @@
+import com.jfrog.bintray.gradle.BintrayPlugin
 import data.AuthData
 import data.PublishData
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
+import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin
 import task.*
 
 class LibraryPublishingPlugin implements Plugin<Project> {
 
     void apply(Project project) {
-
-        def extension = project.extensions.create('LibraryPublishing', LibraryPublishingPluginExtension)
-
-        project.plugins.apply("com.jfrog.bintray")
+        project.plugins.apply(BintrayPlugin)
         project.plugins.apply(MavenPublishPlugin)
 
-        configure(project)
+        configureProject(project)
+        setupPublish(project)
+    }
 
+    private setupPublish(Project project) {
         project.afterEvaluate {
 
             def authData = AuthData.fromProject(project)
             def publishData = PublishData.fromProject(project)
 
-            project.version = extension.version
-            project.group = publishData.groupId
+            project.publishing {
+                publications {
+                    release(MavenPublication) {
+                        groupId project.group
+                        artifactId project.name
+                        version project.version
+
+                        from project.components["release"]
+                        artifact("sourcesJar")
+                        artifact("javadocsJar")
+                    }
+                }
+            }
 
             project.bintray {
-
                 user = authData.user
                 key = authData.key
-
+                publish = true
                 configurations = [Dependency.ARCHIVES_CONFIGURATION]
+                publications = ['release']
 
                 pkg {
-                    name = extension.artifactId
+                    name = project.name
                     repo = publishData.repository
+                    githubRepo = publishData.githubRepository
                     licenses = [publishData.licenseName]
                     vcsUrl = publishData.vcsUrl
                     issueTrackerUrl = publishData.issueTrackerUrl
 
-                    publish = true
-
                     version {
-                        name = extension.version
+                        name = project.version
                         released = new Date()
                     }
                 }
             }
         }
-
     }
 
-    private static def configure(Project project) {
+    private configureProject(Project project) {
         if (project.plugins.hasPlugin("java-library")) {
 
             def sourcesJar = project.tasks.register("sourcesJar", SourceJarTask.class)
