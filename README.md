@@ -56,7 +56,7 @@ class SimpleTextRenderer<Item> : ItemBaseRenderer<Item, RenderContract>() {
 }
 ```
 
-Next step is implement RenderContract in particular child of ```Item```:
+Next step is implement `RenderContract` in particular child of ```Item```:
 
 ```kotlin
 sealed class Item : ComparableItem {
@@ -69,7 +69,7 @@ sealed class Item : ComparableItem {
 }
 ```
 
-After we can create Adapter and populate this list:
+after that we can create `RenderAdapter` and populate this list:
 
 ```kotlin
 class ListFragment : Fragment(R.layout.fragment_list) {
@@ -111,7 +111,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
     }
 }
 ```
-
+Also you can find more examples in sample project.
 
 ## License
 ```
