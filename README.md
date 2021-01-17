@@ -56,7 +56,7 @@ class SimpleTextRenderer<Item> : ItemBaseRenderer<Item, RenderContract>() {
 }
 ```
 
-Next step is implement `RenderContract` in particular child of ```Item```:
+Next step is implementing `RenderContract` in particular child of ```Item```:
 
 ```kotlin
 sealed class Item : ComparableItem {
