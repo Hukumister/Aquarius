@@ -19,7 +19,7 @@ allprojects {
 ```
 
 ```groovy
-implementation("com.haroncode.gemini:aquarius:${latest-version}")
+implementation("com.haroncode.aquarius:aquarius:${latest-version}")
 ```
 ## Benefits
 - [x] Drag and Drop
