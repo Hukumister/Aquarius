@@ -69,7 +69,7 @@ sealed class Item : ComparableItem {
 }
 ```
 
-after that we can create `RenderAdapter` and populate this list:
+after that we can create `RenderAdapter` and populate it:
 
 ```kotlin
 class ListFragment : Fragment(R.layout.fragment_list) {
