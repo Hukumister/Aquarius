@@ -23,6 +23,10 @@ implementation("com.haroncode.gemini:aquarius:${latest-version}")
 ```
 ## Benefits
 - [x] Drag and Drop
+- [x] DiffUtil 
+- [x] Async adapter 
+- [x] Dsl for ItemDecoration
+
 
 ## Getting started 
 
