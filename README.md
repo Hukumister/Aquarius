@@ -23,6 +23,7 @@ implementation("com.haroncode.aquarius:aquarius:${latest-version}")
 ```
 ## Benefits
 - [x] Drag and Drop
+- [x] Swipe to dismiss
 - [x] DiffUtil 
 - [x] Async adapter 
 - [x] Dsl for ItemDecoration
