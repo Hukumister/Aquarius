@@ -1,4 +1,3 @@
-[![jCenter](https://api.bintray.com/packages/haroncode/maven/aquarius/images/download.svg)](https://bintray.com/haroncode/maven/gemini-core/_latestVersion)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Build](https://github.com/HaronCode/Aquarius/workflows/Build/badge.svg)
 
@@ -8,18 +7,20 @@ Simple wrapper for recycler view to easy work with difficult lists.
 ## Installing
 Available through bintray.com.
 
-Add the maven repo to your root `build.gradle`
+Add the maven repo to your root `settings.gradle`
 
 ```groovy
-allprojects {
+dependencyResolutionManagement {
     repositories {
-        maven { url 'https://dl.bintray.com/haroncode/maven' }
+        maven {
+            url = "https://maven.pkg.github.com/Hukumister/Aquarius"
+        }
     }
 }
 ```
 
 ```groovy
-implementation("com.haroncode.aquarius:aquarius:${latest-version}")
+implementation("com.github.aquarius:aquarius:${latest-version}")
 ```
 ## Benefits
 - [x] Drag and Drop
