@@ -5,22 +5,10 @@
 Simple wrapper for recycler view to easy work with difficult lists.
 
 ## Installing
-Available through bintray.com.
-
-Add the maven repo to your root `settings.gradle`
+Available through maven central:
 
 ```groovy
-dependencyResolutionManagement {
-    repositories {
-        maven {
-            url = "https://maven.pkg.github.com/Hukumister/Aquarius"
-        }
-    }
-}
-```
-
-```groovy
-implementation("com.github.aquarius:aquarius:${latest-version}")
+implementation("io.github.hukumister:aquarius:${latest-version}")
 ```
 ## Benefits
 - [x] Drag and Drop

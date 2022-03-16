@@ -1,4 +1,5 @@
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 Properties localProperties = new Properties()
 localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
@@ -20,20 +21,51 @@ afterEvaluate {
                 version = findProperty("version")
 
                 from components.release
+
+                pom {
+                    name = 'Aquarius'
+                    description = 'Simple wrapper for recycler view to easy work with difficult lists'
+                    url = 'https://github.com/Hukumister/Aquariusy'
+
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = 'https://www.mit.edu/~amini/LICENSE.md'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'zaltmsna.nikita'
+                            name = 'Zaltsman Nikita'
+                            email = 'nikitazaltsman@gmail.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:git://github.com/Hukumister/Aquarius'
+                        developerConnection = 'scm:git@github.com:Hukumister/Aquarius.git'
+                        url = 'https://github.com/Hukumister/Aquarius'
+                    }
+                }
             }
         }
 
         repositories {
             maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/Hukumister/Aquarius")
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
 
                 credentials {
-                    username = localProperties.get('GITHUB_USER')
-                    password = localProperties.get('GITHUB_PERSONAL_ACCESS_TOKEN')
+                    username = localProperties.get('OSSRH_USERNAME')
+                    password = localProperties.get('OSSRH_PASSWORD')
                 }
             }
         }
     }
 }
 
+//def signingKey = findProperty('SIGNING_KEY')
+//def signingKeyPwd = findProperty('SIGNING_KEY_PWD')
+
+signing {
+//    useInMemoryPgpKeys(signingKey, signingKeyPwd)
+    sign publishing.publications
+}
