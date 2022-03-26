@@ -1,5 +1,5 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Build](https://github.com/HaronCode/Aquarius/workflows/Build/badge.svg)
+![Build](https://github.com/Hukumister/Aquarius/workflows/Build/badge.svg)
 
 # Aquarius
 Simple wrapper for recycler view to easy work with difficult lists.
